@@ -398,6 +398,16 @@
             border-radius: 6px;
             border: 1px solid rgba(58, 121, 94, 0.2);
         }
+        .empty-cell {
+            background: transparent !important;
+            border: none !important;
+            cursor: default !important;
+        }
+
+        .empty-cell:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
 
         /* Colores de categorías */
         .alkali { background: #FFB6C1; color: #333 }
@@ -1328,70 +1338,83 @@
         }
 
         // Crear tabla periódica
-        function createPeriodicTable() {
-            table.innerHTML = '';
-            lanthanidesContainer.innerHTML = '';
-            actinidesContainer.innerHTML = '';
-            allCells = [];
-            
-            // Crear celdas de la tabla principal
-            elements.forEach(el => {
-                const cell = document.createElement('div');
-                cell.className = `cell ${getGroupClass(el.group)}`;
-                cell.style.gridColumn = el.x;
-                cell.style.gridRow = el.y;
-                cell.dataset.z = el.z;
-                cell.innerHTML = `
-                    <div class="num">${el.z}</div>
-                    <div class="sym">${el.sym}</div>
-                    <div class="ename">${el.name}</div>
-                `;
-                cell.addEventListener('click', () => {
-                    showElementInfo(el);
-                    showScreen('main');
-                });
-                table.appendChild(cell);
-                allCells.push(cell);
-            });
-            
-            // Crear lantánidos - posición corregida
-            lanthanides.forEach(el => {
-                const cell = document.createElement('div');
-                cell.className = `cell ${getGroupClass(el.group)}`;
-                // Comenzar desde la columna 3 (posición correcta debajo de los dos huecos)
-                cell.style.gridColumn = el.x;
-                cell.innerHTML = `
-                    <div class="num">${el.z}</div>
-                    <div class="sym">${el.sym}</div>
-                    <div class="ename">${el.name}</div>
-                `;
-                cell.addEventListener('click', () => {
-                    showElementInfo(el);
-                    showScreen('main');
-                });
-                lanthanidesContainer.appendChild(cell);
-                allCells.push(cell);
-            });
-            
-            // Crear actínidos - posición corregida
-            actinides.forEach(el => {
-                const cell = document.createElement('div');
-                cell.className = `cell ${getGroupClass(el.group)}`;
-                // Comenzar desde la columna 3 (posición correcta debajo de los dos huecos)
-                cell.style.gridColumn = el.x;
-                cell.innerHTML = `
-                    <div class="num">${el.z}</div>
-                    <div class="sym">${el.sym}</div>
-                    <div class="ename">${el.name}</div>
-                `;
-                cell.addEventListener('click', () => {
-                    showElementInfo(el);
-                    showScreen('main');
-                });
-                actinidesContainer.appendChild(cell);
-                allCells.push(cell);
-            });
-        }
+// Crear tabla periódica
+function createPeriodicTable() {
+    table.innerHTML = '';
+    lanthanidesContainer.innerHTML = '';
+    actinidesContainer.innerHTML = '';
+    allCells = [];
+    
+    // Crear celdas de la tabla principal
+    elements.forEach(el => {
+        const cell = document.createElement('div');
+        cell.className = `cell ${getGroupClass(el.group)}`;
+        cell.style.gridColumn = el.x;
+        cell.style.gridRow = el.y;
+        cell.dataset.z = el.z;
+        cell.innerHTML = `
+            <div class="num">${el.z}</div>
+            <div class="sym">${el.sym}</div>
+            <div class="ename">${el.name}</div>
+        `;
+        cell.addEventListener('click', () => {
+            showElementInfo(el);
+            showScreen('main');
+        });
+        table.appendChild(cell);
+        allCells.push(cell);
+    });
+    
+    // Crear lantánidos - CON ACOMODO CORREGIDO
+    // Añadir 2 celdas vacías al principio para alinear con la tabla principal
+    for (let i = 0; i < 2; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'cell empty-cell';
+        lanthanidesContainer.appendChild(emptyCell);
+    }
+    
+    lanthanides.forEach(el => {
+        const cell = document.createElement('div');
+        cell.className = `cell ${getGroupClass(el.group)}`;
+        cell.dataset.z = el.z;
+        cell.innerHTML = `
+            <div class="num">${el.z}</div>
+            <div class="sym">${el.sym}</div>
+            <div class="ename">${el.name}</div>
+        `;
+        cell.addEventListener('click', () => {
+            showElementInfo(el);
+            showScreen('main');
+        });
+        lanthanidesContainer.appendChild(cell);
+        allCells.push(cell);
+    });
+    
+    // Crear actínidos - CON ACOMODO CORREGIDO
+    // Añadir 2 celdas vacías al principio para alinear con la tabla principal
+    for (let i = 0; i < 2; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'cell empty-cell';
+        actinidesContainer.appendChild(emptyCell);
+    }
+    
+    actinides.forEach(el => {
+        const cell = document.createElement('div');
+        cell.className = `cell ${getGroupClass(el.group)}`;
+        cell.dataset.z = el.z;
+        cell.innerHTML = `
+            <div class="num">${el.z}</div>
+            <div class="sym">${el.sym}</div>
+            <div class="ename">${el.name}</div>
+        `;
+        cell.addEventListener('click', () => {
+            showElementInfo(el);
+            showScreen('main');
+        });
+        actinidesContainer.appendChild(cell);
+        allCells.push(cell);
+    });
+}
 
         // Funciones para cambiar entre pantallas
         function showScreen(screen) {
@@ -1723,3 +1746,4 @@
     </script>
 </body>
 </html>
+
