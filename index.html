@@ -1354,11 +1354,12 @@
                 allCells.push(cell);
             });
             
-            // Crear lantánidos
+            // Crear lantánidos - ahora con el mismo tamaño y empezando en la columna 3
             lanthanides.forEach(el => {
                 const cell = document.createElement('div');
                 cell.className = `cell ${getGroupClass(el.group)}`;
-                cell.style.gridColumn = el.x - 2;
+                // Comenzar desde la columna 3 (debajo de los dos huecos)
+                cell.style.gridColumn = el.x;
                 cell.innerHTML = `
                     <div class="num">${el.z}</div>
                     <div class="sym">${el.sym}</div>
@@ -1372,11 +1373,12 @@
                 allCells.push(cell);
             });
             
-            // Crear actínidos
+            // Crear actínidos - ahora con el mismo tamaño y empezando en la columna 3
             actinides.forEach(el => {
                 const cell = document.createElement('div');
                 cell.className = `cell ${getGroupClass(el.group)}`;
-                cell.style.gridColumn = el.x - 2;
+                // Comenzar desde la columna 3 (debajo de los dos huecos)
+                cell.style.gridColumn = el.x;
                 cell.innerHTML = `
                     <div class="num">${el.z}</div>
                     <div class="sym">${el.sym}</div>
@@ -1721,5 +1723,3 @@
     </script>
 </body>
 </html>
-
-
