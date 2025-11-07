@@ -211,20 +211,17 @@
         .table-screen {
             display: none;
             height: 100vh;
-            overflow: hidden;
-            transform: rotate(90deg);
-            transform-origin: center center;
-            width: 100vh;
-            height: 100vw;
+            overflow: auto;
             position: fixed;
-            top: 50%;
-            left: 50%;
-            margin-top: -50vw;
-            margin-left: -50vh;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--bg-dark);
+            z-index: 100;
         }
 
         .table-container {
-            padding: 10px;
+            padding: 15px;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -234,7 +231,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .back-btn {
@@ -260,7 +257,7 @@
         .table-controls {
             display: flex;
             gap: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
         }
 
@@ -283,51 +280,53 @@
             border-color: rgba(58, 121, 94, 0.4);
         }
 
-        .periodic-table {
+        .periodic-table-container {
             flex: 1;
             overflow: auto;
             background: linear-gradient(180deg, #111111, #151515);
             border-radius: 8px;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid rgba(58, 121, 94, 0.2);
         }
 
         .periodic {
             display: grid;
             grid-template-columns: repeat(18, 1fr);
-            gap: 4px;
+            gap: 3px;
+            margin-bottom: 15px;
         }
 
         .cell {
             background: rgba(30, 30, 30, 0.8);
             border-radius: 4px;
-            padding: 4px;
+            padding: 3px;
             color: var(--text-light);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            font-size: 10px;
+            font-size: 9px;
             border: 1px solid rgba(58, 121, 94, 0.1);
             cursor: pointer;
             transition: all 0.3s ease;
             aspect-ratio: 1;
+            min-height: 0;
         }
 
         .cell .num {
-            font-size: 8px;
+            font-size: 7px;
             opacity: 0.85;
         }
 
         .cell .sym {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 400;
             line-height: 1;
             text-align: center;
-            margin: 2px 0;
+            margin: 1px 0;
         }
 
         .cell .ename {
-            font-size: 8px;
+            font-size: 7px;
             opacity: 0.95;
             line-height: 1.05;
             font-weight: 600;
@@ -341,16 +340,15 @@
         }
 
         .bottom-series-container {
-            margin-top: 10px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .bottom-series {
             display: grid;
             grid-template-columns: repeat(15, 1fr);
-            gap: 4px;
+            gap: 3px;
             background: linear-gradient(180deg, #111111, #151515);
             padding: 8px;
             border-radius: 6px;
@@ -375,12 +373,33 @@
         .d-block { background: #87CEEB !important; color: #333; }
         .f-block { background: #FFDAC1 !important; color: #333; }
 
+        /* Colores para electronegatividad */
+        .electroneg-low { background: #e6f3ff !important; color: #333; }
+        .electroneg-medium { background: #99ccff !important; color: #333; }
+        .electroneg-high { background: #0066cc !important; color: #fff; }
+
+        /* Colores para radio atómico */
+        .radius-small { background: #e8f5e8 !important; color: #333; }
+        .radius-medium { background: #8fdc8f !important; color: #333; }
+        .radius-large { background: #1a4d2a !important; color: #fff; }
+
+        /* Colores para ionización */
+        .ionization-low { background: #ffe6e6 !important; color: #333; }
+        .ionization-medium { background: #ff9999 !important; color: #333; }
+        .ionization-high { background: #cc0000 !important; color: #fff; }
+
         /* Pantalla de orbitales 3D */
         .orbitals-screen {
             display: none;
             height: 100vh;
             padding: 20px;
             overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--bg-dark);
+            z-index: 100;
         }
 
         .orbitals-header {
@@ -480,6 +499,7 @@
             overflow: hidden;
             margin-top: 20px;
             display: none;
+            height: 300px;
         }
 
         .orbital-canvas {
@@ -551,6 +571,14 @@
             
             .element-details {
                 grid-template-columns: 1fr;
+            }
+            
+            .cell .sym {
+                font-size: 12px;
+            }
+            
+            .cell .ename {
+                font-size: 6px;
             }
         }
     </style>
@@ -631,9 +659,10 @@
                 <button class="control-toggle" id="toggleElectroneg">Elektronegatibitatea</button>
                 <button class="control-toggle" id="toggleRadius">Erradioa</button>
                 <button class="control-toggle" id="toggleIonization">Ionizazioa</button>
+                <button class="control-toggle" id="toggleNormal" style="flex: 0 0 auto;">Normal</button>
             </div>
             
-            <div class="periodic-table">
+            <div class="periodic-table-container">
                 <div class="periodic" id="table"></div>
                 <div class="bottom-series-container">
                     <div class="bottom-series" id="lanthanides"></div>
@@ -867,6 +896,7 @@
         const toggleElectroneg = document.getElementById('toggleElectroneg');
         const toggleRadius = document.getElementById('toggleRadius');
         const toggleIonization = document.getElementById('toggleIonization');
+        const toggleNormal = document.getElementById('toggleNormal');
         const table = document.getElementById('table');
         const lanthanidesContainer = document.getElementById('lanthanides');
         const actinidesContainer = document.getElementById('actinides');
@@ -887,6 +917,7 @@
         let isAutoRotating = false;
         let scene, camera, renderer, controls;
         let orbitalModels = {};
+        let allCells = [];
 
         // Información sobre los orbitales
         const orbitalInfoData = {
@@ -1068,11 +1099,198 @@
             }
         }
 
+        // Determinar bloque electrónico
+        function getElectronBlock(element) {
+            const group = element.x;
+            
+            // Excepción: Helio es bloque s aunque esté en el grupo 18
+            if (element.z === 2) return 's-block';
+            
+            // Basado en la posición en la tabla periódica
+            if (element.group === 'lanthanide' || element.group === 'actinide') {
+                return 'f-block';
+            } else if (group >= 3 && group <= 12) {
+                return 'd-block';
+            } else if (group >= 13 && group <= 18) {
+                return 'p-block';
+            } else if (group >= 1 && group <= 2) {
+                return 's-block';
+            }
+            
+            return 's-block'; // default
+        }
+
+        // Aplicar colores por bloques electrónicos
+        function applyElectronBlockColors() {
+            allCells.forEach(cell => {
+                const z = parseInt(cell.dataset.z);
+                let element;
+                
+                // Encontrar el elemento en el conjunto de datos apropiado
+                if (z >= 57 && z <= 71) {
+                    element = lanthanides.find(el => el.z === z);
+                } else if (z >= 89 && z <= 103) {
+                    element = actinides.find(el => el.z === z);
+                } else {
+                    element = elements.find(el => el.z === z);
+                }
+                
+                if (element) {
+                    const block = getElectronBlock(element);
+                    
+                    // Remover clases anteriores
+                    cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
+                                         'electroneg-low', 'electroneg-medium', 'electroneg-high',
+                                         'radius-small', 'radius-medium', 'radius-large',
+                                         'ionization-low', 'ionization-medium', 'ionization-high');
+                    
+                    // Aplicar nueva clase de bloque
+                    cell.classList.add(block);
+                }
+            });
+        }
+
+        // Aplicar colores por electronegatividad
+        function applyElectronegativityColors() {
+            allCells.forEach(cell => {
+                const z = parseInt(cell.dataset.z);
+                let element;
+                
+                // Encontrar el elemento en el conjunto de datos apropiado
+                if (z >= 57 && z <= 71) {
+                    element = lanthanides.find(el => el.z === z);
+                } else if (z >= 89 && z <= 103) {
+                    element = actinides.find(el => el.z === z);
+                } else {
+                    element = elements.find(el => el.z === z);
+                }
+                
+                if (element) {
+                    // Remover clases anteriores
+                    cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
+                                         'electroneg-low', 'electroneg-medium', 'electroneg-high',
+                                         'radius-small', 'radius-medium', 'radius-large',
+                                         'ionization-low', 'ionization-medium', 'ionization-high');
+                    
+                    // Aplicar color basado en electronegatividad
+                    if (element.electroneg === 0) {
+                        cell.classList.add('electroneg-low');
+                    } else if (element.electroneg < 2.0) {
+                        cell.classList.add('electroneg-low');
+                    } else if (element.electroneg < 3.0) {
+                        cell.classList.add('electroneg-medium');
+                    } else {
+                        cell.classList.add('electroneg-high');
+                    }
+                }
+            });
+        }
+
+        // Aplicar colores por radio atómico
+        function applyAtomicRadiusColors() {
+            allCells.forEach(cell => {
+                const z = parseInt(cell.dataset.z);
+                let element;
+                
+                // Encontrar el elemento en el conjunto de datos apropiado
+                if (z >= 57 && z <= 71) {
+                    element = lanthanides.find(el => el.z === z);
+                } else if (z >= 89 && z <= 103) {
+                    element = actinides.find(el => el.z === z);
+                } else {
+                    element = elements.find(el => el.z === z);
+                }
+                
+                if (element) {
+                    // Remover clases anteriores
+                    cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
+                                         'electroneg-low', 'electroneg-medium', 'electroneg-high',
+                                         'radius-small', 'radius-medium', 'radius-large',
+                                         'ionization-low', 'ionization-medium', 'ionization-high');
+                    
+                    // Aplicar color basado en radio atómico
+                    if (element.radius === 0) {
+                        cell.classList.add('radius-small');
+                    } else if (element.radius < 100) {
+                        cell.classList.add('radius-small');
+                    } else if (element.radius < 200) {
+                        cell.classList.add('radius-medium');
+                    } else {
+                        cell.classList.add('radius-large');
+                    }
+                }
+            });
+        }
+
+        // Aplicar colores por energía de ionización
+        function applyIonizationColors() {
+            allCells.forEach(cell => {
+                const z = parseInt(cell.dataset.z);
+                let element;
+                
+                // Encontrar el elemento en el conjunto de datos apropiado
+                if (z >= 57 && z <= 71) {
+                    element = lanthanides.find(el => el.z === z);
+                } else if (z >= 89 && z <= 103) {
+                    element = actinides.find(el => el.z === z);
+                } else {
+                    element = elements.find(el => el.z === z);
+                }
+                
+                if (element) {
+                    // Remover clases anteriores
+                    cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
+                                         'electroneg-low', 'electroneg-medium', 'electroneg-high',
+                                         'radius-small', 'radius-medium', 'radius-large',
+                                         'ionization-low', 'ionization-medium', 'ionization-high');
+                    
+                    // Aplicar color basado en energía de ionización
+                    if (element.ionization === 0) {
+                        cell.classList.add('ionization-low');
+                    } else if (element.ionization < 800) {
+                        cell.classList.add('ionization-low');
+                    } else if (element.ionization < 1200) {
+                        cell.classList.add('ionization-medium');
+                    } else {
+                        cell.classList.add('ionization-high');
+                    }
+                }
+            });
+        }
+
+        // Restaurar colores normales
+        function restoreNormalColors() {
+            allCells.forEach(cell => {
+                // Remover todas las clases de color especiales
+                cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
+                                     'electroneg-low', 'electroneg-medium', 'electroneg-high',
+                                     'radius-small', 'radius-medium', 'radius-large',
+                                     'ionization-low', 'ionization-medium', 'ionization-high');
+                
+                // Restaurar color original basado en grupo
+                const z = parseInt(cell.dataset.z);
+                let element;
+                
+                if (z >= 57 && z <= 71) {
+                    element = lanthanides.find(el => el.z === z);
+                } else if (z >= 89 && z <= 103) {
+                    element = actinides.find(el => el.z === z);
+                } else {
+                    element = elements.find(el => el.z === z);
+                }
+                
+                if (element) {
+                    cell.classList.add(getGroupClass(element.group));
+                }
+            });
+        }
+
         // Crear tabla periódica
         function createPeriodicTable() {
             table.innerHTML = '';
             lanthanidesContainer.innerHTML = '';
             actinidesContainer.innerHTML = '';
+            allCells = [];
             
             // Crear celdas de la tabla principal
             elements.forEach(el => {
@@ -1091,6 +1309,7 @@
                     showScreen('main');
                 });
                 table.appendChild(cell);
+                allCells.push(cell);
             });
             
             // Crear lantánidos
@@ -1108,6 +1327,7 @@
                     showScreen('main');
                 });
                 lanthanidesContainer.appendChild(cell);
+                allCells.push(cell);
             });
             
             // Crear actínidos
@@ -1125,6 +1345,7 @@
                     showScreen('main');
                 });
                 actinidesContainer.appendChild(cell);
+                allCells.push(cell);
             });
         }
 
@@ -1355,23 +1576,78 @@
 
         // Toggles para cambiar modo de visualización de la tabla
         toggleElec.addEventListener('click', () => {
-            toggleElec.classList.toggle('active');
-            // Aquí iría la lógica para cambiar a modo orbitales
+            // Desactivar todos los toggles
+            toggleElec.classList.remove('active');
+            toggleElectroneg.classList.remove('active');
+            toggleRadius.classList.remove('active');
+            toggleIonization.classList.remove('active');
+            toggleNormal.classList.remove('active');
+            
+            // Activar solo este toggle
+            toggleElec.classList.add('active');
+            
+            // Aplicar colores
+            applyElectronBlockColors();
         });
 
         toggleElectroneg.addEventListener('click', () => {
-            toggleElectroneg.classList.toggle('active');
-            // Aquí iría la lógica para cambiar a modo electronegatividad
+            // Desactivar todos los toggles
+            toggleElec.classList.remove('active');
+            toggleElectroneg.classList.remove('active');
+            toggleRadius.classList.remove('active');
+            toggleIonization.classList.remove('active');
+            toggleNormal.classList.remove('active');
+            
+            // Activar solo este toggle
+            toggleElectroneg.classList.add('active');
+            
+            // Aplicar colores
+            applyElectronegativityColors();
         });
 
         toggleRadius.addEventListener('click', () => {
-            toggleRadius.classList.toggle('active');
-            // Aquí iría la lógica para cambiar a modo radio atómico
+            // Desactivar todos los toggles
+            toggleElec.classList.remove('active');
+            toggleElectroneg.classList.remove('active');
+            toggleRadius.classList.remove('active');
+            toggleIonization.classList.remove('active');
+            toggleNormal.classList.remove('active');
+            
+            // Activar solo este toggle
+            toggleRadius.classList.add('active');
+            
+            // Aplicar colores
+            applyAtomicRadiusColors();
         });
 
         toggleIonization.addEventListener('click', () => {
-            toggleIonization.classList.toggle('active');
-            // Aquí iría la lógica para cambiar a modo ionización
+            // Desactivar todos los toggles
+            toggleElec.classList.remove('active');
+            toggleElectroneg.classList.remove('active');
+            toggleRadius.classList.remove('active');
+            toggleIonization.classList.remove('active');
+            toggleNormal.classList.remove('active');
+            
+            // Activar solo este toggle
+            toggleIonization.classList.add('active');
+            
+            // Aplicar colores
+            applyIonizationColors();
+        });
+
+        toggleNormal.addEventListener('click', () => {
+            // Desactivar todos los toggles
+            toggleElec.classList.remove('active');
+            toggleElectroneg.classList.remove('active');
+            toggleRadius.classList.remove('active');
+            toggleIonization.classList.remove('active');
+            toggleNormal.classList.remove('active');
+            
+            // Activar solo este toggle
+            toggleNormal.classList.add('active');
+            
+            // Restaurar colores normales
+            restoreNormalColors();
         });
 
         // Event listeners para botones de orbitales
