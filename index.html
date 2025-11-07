@@ -711,7 +711,7 @@
                 <button class="control-toggle" id="toggleElectroneg">Elektronegatibitatea</button>
                 <button class="control-toggle" id="toggleRadius">Erradioa</button>
                 <button class="control-toggle" id="toggleIonization">Ionizazioa</button>
-                <button class="control-toggle" id="toggleNormal" style="flex: 0 0 auto;">Familia</button>
+                <button class="control-toggle active" id="toggleNormal" style="flex: 0 0 auto;">Familia</button>
             </div>
             
             <div class="periodic-table-container">
@@ -1427,6 +1427,9 @@
                     break;
                 case 'table':
                     tableScreen.style.display = 'block';
+                    // Asegurar que el botón Familia esté activo y se apliquen los colores de familia
+                    toggleNormal.classList.add('active');
+                    restoreNormalColors();
                     break;
                 case 'orbitals':
                     orbitalsScreen.style.display = 'block';
