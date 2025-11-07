@@ -353,6 +353,7 @@
             transition: all 0.3s ease;
             aspect-ratio: 1;
             min-height: 0;
+            width: 100%; /* Asegurar mismo ancho */
         }
 
         .cell .num {
@@ -390,13 +391,22 @@
         }
 
         .bottom-series {
-            display: grid;
-            grid-template-columns: repeat(18, 1fr); /* CAMBIADO: 15 → 18 */
+            display: flex;
             gap: 3px;
             background: linear-gradient(180deg, #111111, #151515);
             padding: 8px;
             border-radius: 6px;
             border: 1px solid rgba(58, 121, 94, 0.2);
+            justify-content: flex-start; /* Alinear a la izquierda */
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+
+        /* Añadir espacios vacíos para alinear */
+        .space-cell {
+            width: 44px; /* Mismo ancho que las celdas normales */
+            height: 44px;
+            flex-shrink: 0;
         }
 
         /* Colores de categorías */
@@ -795,7 +805,7 @@
     </div>
 
     <script>
-        // Datos completos de los elementos (simplificados para el ejemplo)
+        // Datos completos de los elementos
         const elements = [
             {z:1,sym:'H',name:'Hidrogenoa',mass:1.008,val:[-1,1],config:'1s1',group:'nonmetal',x:1,y:1,radius:53,electroneg:2.20,ionization:1312},
             {z:2,sym:'He',name:'Helioa',mass:4.0026,val:[0],config:'1s2',group:'noble',x:18,y:1,radius:31,electroneg:0,ionization:2372},
@@ -1354,12 +1364,17 @@
                 allCells.push(cell);
             });
             
-            // Crear lantánidos - CON POSICIÓN CORREGIDA
+            // Crear lantánidos - SIMPLE Y ALINEADO A LA IZQUIERDA
+            // Añadir 2 espacios vacíos al principio
+            for (let i = 0; i < 2; i++) {
+                const space = document.createElement('div');
+                space.className = 'space-cell';
+                lanthanidesContainer.appendChild(space);
+            }
+            
             lanthanides.forEach(el => {
                 const cell = document.createElement('div');
                 cell.className = `cell ${getGroupClass(el.group)}`;
-                // Añadir +2 al gridColumn para compensar los 2 huecos
-                cell.style.gridColumn = el.x + 2;
                 cell.dataset.z = el.z;
                 cell.innerHTML = `
                     <div class="num">${el.z}</div>
@@ -1374,12 +1389,17 @@
                 allCells.push(cell);
             });
             
-            // Crear actínidos - CON POSICIÓN CORREGIDA  
+            // Crear actínidos - SIMPLE Y ALINEADO A LA IZQUIERDA
+            // Añadir 2 espacios vacíos al principio
+            for (let i = 0; i < 2; i++) {
+                const space = document.createElement('div');
+                space.className = 'space-cell';
+                actinidesContainer.appendChild(space);
+            }
+            
             actinides.forEach(el => {
                 const cell = document.createElement('div');
                 cell.className = `cell ${getGroupClass(el.group)}`;
-                // Añadir +2 al gridColumn para compensar los 2 huecos
-                cell.style.gridColumn = el.x + 2;
                 cell.dataset.z = el.z;
                 cell.innerHTML = `
                     <div class="num">${el.z}</div>
