@@ -390,15 +390,14 @@
         }
 
         .bottom-series {
-    display: grid;
-    grid-template-columns: repeat(18, 1fr);  /* Cambiar 15 por 18 */
-    gap: 3px;
-    background: linear-gradient(180deg, #111111, #151515);
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid rgba(58, 121, 94, 0.2);
-}
-
+            display: grid;
+            grid-template-columns: repeat(18, 1fr); /* CAMBIADO: 15 → 18 */
+            gap: 3px;
+            background: linear-gradient(180deg, #111111, #151515);
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(58, 121, 94, 0.2);
+        }
 
         /* Colores de categorías */
         .alkali { background: #FFB6C1; color: #333 }
@@ -1329,73 +1328,72 @@
         }
 
         // Crear tabla periódica
-// Crear tabla periódica
-function createPeriodicTable() {
-    table.innerHTML = '';
-    lanthanidesContainer.innerHTML = '';
-    actinidesContainer.innerHTML = '';
-    allCells = [];
-    
-    // Crear celdas de la tabla principal
-    elements.forEach(el => {
-        const cell = document.createElement('div');
-        cell.className = `cell ${getGroupClass(el.group)}`;
-        cell.style.gridColumn = el.x;
-        cell.style.gridRow = el.y;
-        cell.dataset.z = el.z;
-        cell.innerHTML = `
-            <div class="num">${el.z}</div>
-            <div class="sym">${el.sym}</div>
-            <div class="ename">${el.name}</div>
-        `;
-        cell.addEventListener('click', () => {
-            showElementInfo(el);
-            showScreen('main');
-        });
-        table.appendChild(cell);
-        allCells.push(cell);
-    });
-    
-    // Crear lantánidos - CON POSICIÓN CORREGIDA
-    lanthanides.forEach(el => {
-        const cell = document.createElement('div');
-        cell.className = `cell ${getGroupClass(el.group)}`;
-        // Añadir +2 al gridColumn para compensar los 2 huecos
-        cell.style.gridColumn = el.x + 2;
-        cell.dataset.z = el.z;
-        cell.innerHTML = `
-            <div class="num">${el.z}</div>
-            <div class="sym">${el.sym}</div>
-            <div class="ename">${el.name}</div>
-        `;
-        cell.addEventListener('click', () => {
-            showElementInfo(el);
-            showScreen('main');
-        });
-        lanthanidesContainer.appendChild(cell);
-        allCells.push(cell);
-    });
-    
-    // Crear actínidos - CON POSICIÓN CORREGIDA  
-    actinides.forEach(el => {
-        const cell = document.createElement('div');
-        cell.className = `cell ${getGroupClass(el.group)}`;
-        // Añadir +2 al gridColumn para compensar los 2 huecos
-        cell.style.gridColumn = el.x + 2;
-        cell.dataset.z = el.z;
-        cell.innerHTML = `
-            <div class="num">${el.z}</div>
-            <div class="sym">${el.sym}</div>
-            <div class="ename">${el.name}</div>
-        `;
-        cell.addEventListener('click', () => {
-            showElementInfo(el);
-            showScreen('main');
-        });
-        actinidesContainer.appendChild(cell);
-        allCells.push(cell);
-    });
-}
+        function createPeriodicTable() {
+            table.innerHTML = '';
+            lanthanidesContainer.innerHTML = '';
+            actinidesContainer.innerHTML = '';
+            allCells = [];
+            
+            // Crear celdas de la tabla principal
+            elements.forEach(el => {
+                const cell = document.createElement('div');
+                cell.className = `cell ${getGroupClass(el.group)}`;
+                cell.style.gridColumn = el.x;
+                cell.style.gridRow = el.y;
+                cell.dataset.z = el.z;
+                cell.innerHTML = `
+                    <div class="num">${el.z}</div>
+                    <div class="sym">${el.sym}</div>
+                    <div class="ename">${el.name}</div>
+                `;
+                cell.addEventListener('click', () => {
+                    showElementInfo(el);
+                    showScreen('main');
+                });
+                table.appendChild(cell);
+                allCells.push(cell);
+            });
+            
+            // Crear lantánidos - CON POSICIÓN CORREGIDA
+            lanthanides.forEach(el => {
+                const cell = document.createElement('div');
+                cell.className = `cell ${getGroupClass(el.group)}`;
+                // Añadir +2 al gridColumn para compensar los 2 huecos
+                cell.style.gridColumn = el.x + 2;
+                cell.dataset.z = el.z;
+                cell.innerHTML = `
+                    <div class="num">${el.z}</div>
+                    <div class="sym">${el.sym}</div>
+                    <div class="ename">${el.name}</div>
+                `;
+                cell.addEventListener('click', () => {
+                    showElementInfo(el);
+                    showScreen('main');
+                });
+                lanthanidesContainer.appendChild(cell);
+                allCells.push(cell);
+            });
+            
+            // Crear actínidos - CON POSICIÓN CORREGIDA  
+            actinides.forEach(el => {
+                const cell = document.createElement('div');
+                cell.className = `cell ${getGroupClass(el.group)}`;
+                // Añadir +2 al gridColumn para compensar los 2 huecos
+                cell.style.gridColumn = el.x + 2;
+                cell.dataset.z = el.z;
+                cell.innerHTML = `
+                    <div class="num">${el.z}</div>
+                    <div class="sym">${el.sym}</div>
+                    <div class="ename">${el.name}</div>
+                `;
+                cell.addEventListener('click', () => {
+                    showElementInfo(el);
+                    showScreen('main');
+                });
+                actinidesContainer.appendChild(cell);
+                allCells.push(cell);
+            });
+        }
 
         // Funciones para cambiar entre pantallas
         function showScreen(screen) {
@@ -1727,6 +1725,3 @@ function createPeriodicTable() {
     </script>
 </body>
 </html>
-
-
-
