@@ -432,15 +432,23 @@
         .electroneg-medium { background: #99ccff !important; color: #333; }
         .electroneg-high { background: #0066cc !important; color: #fff; }
 
-        /* Colores para radio atómico */
-        .radius-small { background: #e8f5e8 !important; color: #333; }
-        .radius-medium { background: #8fdc8f !important; color: #333; }
-        .radius-large { background: #1a4d2a !important; color: #fff; }
+        /* Colores para radio atómico - MEJORADO CON MÁS TONALIDADES */
+        .radius-very-small { background: linear-gradient(135deg, #e8f5e8, #c8e6c9) !important; color: #333; }
+        .radius-small { background: linear-gradient(135deg, #a5d6a7, #81c784) !important; color: #333; }
+        .radius-medium-small { background: linear-gradient(135deg, #66bb6a, #4caf50) !important; color: #333; }
+        .radius-medium { background: linear-gradient(135deg, #43a047, #388e3c) !important; color: #fff; }
+        .radius-medium-large { background: linear-gradient(135deg, #2e7d32, #1b5e20) !important; color: #fff; }
+        .radius-large { background: linear-gradient(135deg, #1b5e20, #0d3c13) !important; color: #fff; }
+        .radius-very-large { background: linear-gradient(135deg, #0d3c13, #052509) !important; color: #fff; }
 
-        /* Colores para ionización */
-        .ionization-low { background: #ffe6e6 !important; color: #333; }
-        .ionization-medium { background: #ff9999 !important; color: #333; }
-        .ionization-high { background: #cc0000 !important; color: #fff; }
+        /* Colores para ionización - MEJORADO CON MÁS TONALIDADES */
+        .ionization-very-low { background: linear-gradient(135deg, #ffe6e6, #ffcdd2) !important; color: #333; }
+        .ionization-low { background: linear-gradient(135deg, #ef9a9a, #e57373) !important; color: #333; }
+        .ionization-medium-low { background: linear-gradient(135deg, #ef5350, #f44336) !important; color: #fff; }
+        .ionization-medium { background: linear-gradient(135deg, #e53935, #d32f2f) !important; color: #fff; }
+        .ionization-medium-high { background: linear-gradient(135deg, #c62828, #b71c1c) !important; color: #fff; }
+        .ionization-high { background: linear-gradient(135deg, #b71c1c, #8b0000) !important; color: #fff; }
+        .ionization-very-high { background: linear-gradient(135deg, #8b0000, #5a0000) !important; color: #fff; }
 
         /* Pantalla de orbitales 3D */
         .orbitals-screen {
@@ -1193,8 +1201,8 @@
                     // Remover clases anteriores
                     cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
                                          'electroneg-low', 'electroneg-medium', 'electroneg-high',
-                                         'radius-small', 'radius-medium', 'radius-large',
-                                         'ionization-low', 'ionization-medium', 'ionization-high');
+                                         'radius-very-small', 'radius-small', 'radius-medium-small', 'radius-medium', 'radius-medium-large', 'radius-large', 'radius-very-large',
+                                         'ionization-very-low', 'ionization-low', 'ionization-medium-low', 'ionization-medium', 'ionization-medium-high', 'ionization-high', 'ionization-very-high');
                     
                     // Aplicar nueva clase de bloque
                     cell.classList.add(block);
@@ -1221,8 +1229,8 @@
                     // Remover clases anteriores
                     cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
                                          'electroneg-low', 'electroneg-medium', 'electroneg-high',
-                                         'radius-small', 'radius-medium', 'radius-large',
-                                         'ionization-low', 'ionization-medium', 'ionization-high');
+                                         'radius-very-small', 'radius-small', 'radius-medium-small', 'radius-medium', 'radius-medium-large', 'radius-large', 'radius-very-large',
+                                         'ionization-very-low', 'ionization-low', 'ionization-medium-low', 'ionization-medium', 'ionization-medium-high', 'ionization-high', 'ionization-very-high');
                     
                     // Aplicar color basado en electronegatividad
                     if (element.electroneg === 0) {
@@ -1238,7 +1246,7 @@
             });
         }
 
-        // Aplicar colores por radio atómico
+        // Aplicar colores por radio atómico - MEJORADO CON MÁS TONALIDADES
         function applyAtomicRadiusColors() {
             allCells.forEach(cell => {
                 const z = parseInt(cell.dataset.z);
@@ -1257,24 +1265,32 @@
                     // Remover clases anteriores
                     cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
                                          'electroneg-low', 'electroneg-medium', 'electroneg-high',
-                                         'radius-small', 'radius-medium', 'radius-large',
-                                         'ionization-low', 'ionization-medium', 'ionization-high');
+                                         'radius-very-small', 'radius-small', 'radius-medium-small', 'radius-medium', 'radius-medium-large', 'radius-large', 'radius-very-large',
+                                         'ionization-very-low', 'ionization-low', 'ionization-medium-low', 'ionization-medium', 'ionization-medium-high', 'ionization-high', 'ionization-very-high');
                     
-                    // Aplicar color basado en radio atómico
+                    // Aplicar color basado en radio atómico con más gradación
                     if (element.radius === 0) {
+                        cell.classList.add('radius-very-small');
+                    } else if (element.radius < 60) {
+                        cell.classList.add('radius-very-small');
+                    } else if (element.radius < 90) {
                         cell.classList.add('radius-small');
-                    } else if (element.radius < 100) {
-                        cell.classList.add('radius-small');
-                    } else if (element.radius < 200) {
+                    } else if (element.radius < 120) {
+                        cell.classList.add('radius-medium-small');
+                    } else if (element.radius < 160) {
                         cell.classList.add('radius-medium');
-                    } else {
+                    } else if (element.radius < 200) {
+                        cell.classList.add('radius-medium-large');
+                    } else if (element.radius < 250) {
                         cell.classList.add('radius-large');
+                    } else {
+                        cell.classList.add('radius-very-large');
                     }
                 }
             });
         }
 
-        // Aplicar colores por energía de ionización
+        // Aplicar colores por energía de ionización - MEJORADO CON MÁS TONALIDADES
         function applyIonizationColors() {
             allCells.forEach(cell => {
                 const z = parseInt(cell.dataset.z);
@@ -1293,18 +1309,26 @@
                     // Remover clases anteriores
                     cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
                                          'electroneg-low', 'electroneg-medium', 'electroneg-high',
-                                         'radius-small', 'radius-medium', 'radius-large',
-                                         'ionization-low', 'ionization-medium', 'ionization-high');
+                                         'radius-very-small', 'radius-small', 'radius-medium-small', 'radius-medium', 'radius-medium-large', 'radius-large', 'radius-very-large',
+                                         'ionization-very-low', 'ionization-low', 'ionization-medium-low', 'ionization-medium', 'ionization-medium-high', 'ionization-high', 'ionization-very-high');
                     
-                    // Aplicar color basado en energía de ionización
+                    // Aplicar color basado en energía de ionización con más gradación
                     if (element.ionization === 0) {
+                        cell.classList.add('ionization-very-low');
+                    } else if (element.ionization < 500) {
+                        cell.classList.add('ionization-very-low');
+                    } else if (element.ionization < 700) {
                         cell.classList.add('ionization-low');
-                    } else if (element.ionization < 800) {
-                        cell.classList.add('ionization-low');
-                    } else if (element.ionization < 1200) {
+                    } else if (element.ionization < 900) {
+                        cell.classList.add('ionization-medium-low');
+                    } else if (element.ionization < 1100) {
                         cell.classList.add('ionization-medium');
-                    } else {
+                    } else if (element.ionization < 1300) {
+                        cell.classList.add('ionization-medium-high');
+                    } else if (element.ionization < 1500) {
                         cell.classList.add('ionization-high');
+                    } else {
+                        cell.classList.add('ionization-very-high');
                     }
                 }
             });
@@ -1316,8 +1340,8 @@
                 // Remover todas las clases de color especiales
                 cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
                                      'electroneg-low', 'electroneg-medium', 'electroneg-high',
-                                     'radius-small', 'radius-medium', 'radius-large',
-                                     'ionization-low', 'ionization-medium', 'ionization-high');
+                                     'radius-very-small', 'radius-small', 'radius-medium-small', 'radius-medium', 'radius-medium-large', 'radius-large', 'radius-very-large',
+                                     'ionization-very-low', 'ionization-low', 'ionization-medium-low', 'ionization-medium', 'ionization-medium-high', 'ionization-high', 'ionization-very-high');
                 
                 // Restaurar color original basado en grupo
                 const z = parseInt(cell.dataset.z);
