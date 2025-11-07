@@ -207,11 +207,11 @@
             color: var(--text-light);
         }
 
-        /* Pantalla de tabla periódica - HORIZONTAL */
+        /* Pantalla de tabla periódica - VERTICAL MEJORADA */
         .table-screen {
             display: none;
             height: 100vh;
-            overflow: hidden;
+            overflow: auto;
             position: fixed;
             top: 0;
             left: 0;
@@ -222,7 +222,7 @@
 
         .table-container {
             padding: 15px;
-            height: 100%;
+            min-height: 100%;
             display: flex;
             flex-direction: column;
         }
@@ -232,6 +232,11 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
+            position: sticky;
+            top: 0;
+            background: var(--bg-dark);
+            padding: 10px 0;
+            z-index: 10;
         }
 
         .back-btn {
@@ -259,6 +264,11 @@
             gap: 8px;
             margin-bottom: 15px;
             flex-wrap: wrap;
+            position: sticky;
+            top: 70px;
+            background: var(--bg-dark);
+            padding: 10px 0;
+            z-index: 10;
         }
 
         .control-toggle {
@@ -285,41 +295,28 @@
             overflow: auto;
             background: linear-gradient(180deg, #111111, #151515);
             border-radius: 8px;
-            padding: 15px;
+            padding: 10px;
             border: 1px solid rgba(58, 121, 94, 0.2);
-            transform: rotate(-90deg);
-            transform-origin: center center;
-            width: calc(100vh - 30px);
-            height: calc(100vw - 30px);
-            margin: auto;
-        }
-
-        .periodic-table-inner {
-            transform: rotate(90deg);
-            transform-origin: center center;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+            min-height: 600px;
         }
 
         .periodic {
             display: grid;
             grid-template-columns: repeat(18, 1fr);
-            gap: 6px;
-            margin-bottom: 20px;
-            flex: 1;
+            gap: 3px;
+            margin-bottom: 15px;
+            min-width: 800px; /* Ancho mínimo para que quepa toda la tabla */
         }
 
         .cell {
             background: rgba(30, 30, 30, 0.8);
-            border-radius: 6px;
-            padding: 6px;
+            border-radius: 4px;
+            padding: 3px;
             color: var(--text-light);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            font-size: 11px;
+            font-size: 9px;
             border: 1px solid rgba(58, 121, 94, 0.1);
             cursor: pointer;
             transition: all 0.3s ease;
@@ -328,20 +325,20 @@
         }
 
         .cell .num {
-            font-size: 9px;
+            font-size: 7px;
             opacity: 0.85;
         }
 
         .cell .sym {
-            font-size: 18px;
+            font-size: 12px;
             font-weight: 400;
             line-height: 1;
             text-align: center;
-            margin: 3px 0;
+            margin: 1px 0;
         }
 
         .cell .ename {
-            font-size: 9px;
+            font-size: 6px;
             opacity: 0.95;
             line-height: 1.05;
             font-weight: 600;
@@ -357,17 +354,17 @@
         .bottom-series-container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-top: 15px;
+            gap: 10px;
+            min-width: 800px; /* Mismo ancho mínimo que la tabla principal */
         }
 
         .bottom-series {
             display: grid;
             grid-template-columns: repeat(15, 1fr);
-            gap: 6px;
+            gap: 3px;
             background: linear-gradient(180deg, #111111, #151515);
-            padding: 12px;
-            border-radius: 8px;
+            padding: 8px;
+            border-radius: 6px;
             border: 1px solid rgba(58, 121, 94, 0.2);
         }
 
@@ -590,29 +587,11 @@
             }
             
             .periodic-table-container {
-                padding: 10px;
+                padding: 5px;
             }
             
             .cell .sym {
-                font-size: 16px;
-            }
-        }
-
-        @media (max-height: 700px) {
-            .periodic-table-container {
-                padding: 8px;
-            }
-            
-            .cell {
-                padding: 4px;
-            }
-            
-            .cell .sym {
-                font-size: 14px;
-            }
-            
-            .cell .ename {
-                font-size: 8px;
+                font-size: 10px;
             }
         }
     </style>
@@ -677,7 +656,7 @@
         </div>
     </div>
     
-    <!-- Pantalla de tabla periódica - HORIZONTAL -->
+    <!-- Pantalla de tabla periódica - VERTICAL MEJORADA -->
     <div class="table-screen" id="tableScreen">
         <div class="table-container">
             <div class="table-header">
@@ -695,12 +674,10 @@
             </div>
             
             <div class="periodic-table-container">
-                <div class="periodic-table-inner">
-                    <div class="periodic" id="table"></div>
-                    <div class="bottom-series-container">
-                        <div class="bottom-series" id="lanthanides"></div>
-                        <div class="bottom-series" id="actinides"></div>
-                    </div>
+                <div class="periodic" id="table"></div>
+                <div class="bottom-series-container">
+                    <div class="bottom-series" id="lanthanides"></div>
+                    <div class="bottom-series" id="actinides"></div>
                 </div>
             </div>
         </div>
@@ -787,7 +764,7 @@
     </div>
 
     <script>
-        // Datos completos de los elementos
+        // Datos completos de los elementos (simplificados para el ejemplo)
         const elements = [
             {z:1,sym:'H',name:'Hidrogenoa',mass:1.008,val:[-1,1],config:'1s1',group:'nonmetal',x:1,y:1,radius:53,electroneg:2.20,ionization:1312},
             {z:2,sym:'He',name:'Helioa',mass:4.0026,val:[0],config:'1s2',group:'noble',x:18,y:1,radius:31,electroneg:0,ionization:2372},
@@ -946,7 +923,7 @@
         const categoryHeaders = document.querySelectorAll('.orbital-category-header');
 
         // Variables de estado
-        let currentDisplayMode = 'normal'; // 'normal', 'elec', 'electroneg', 'radius', 'ionization'
+        let currentDisplayMode = 'normal';
         let currentModel = null;
         let isAutoRotating = false;
         let scene, camera, renderer, controls;
@@ -1713,5 +1690,3 @@
     </script>
 </body>
 </html>
-
-
