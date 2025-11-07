@@ -260,7 +260,9 @@
         }
 
         .table-controls {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
             gap: 8px;
             margin-bottom: 15px;
             flex-wrap: wrap;
@@ -280,15 +282,44 @@
             font-size: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
-            flex: 1;
-            min-width: 0;
             text-align: center;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Posicionamiento específico de cada botón */
+        #toggleNormal {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        #toggleElec {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        #toggleRadius {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        #toggleIonization {
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        #toggleElectroneg {
+            grid-column: 1 / span 2; /* Ocupa ambas columnas */
+            grid-row: 3;
+            margin-top: 4px;
         }
 
         .control-toggle.active {
             background: rgba(58, 121, 94, 0.3);
             border-color: rgba(58, 121, 94, 0.4);
-        }
+        }    
 
         .periodic-table-container {
             flex: 1;
@@ -1690,4 +1721,5 @@
     </script>
 </body>
 </html>
+
 
