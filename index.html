@@ -348,31 +348,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: bold;
             color: var(--text-muted);
             background: rgba(58, 121, 94, 0.1);
             border-radius: 4px;
-            padding: 3px;
-            aspect-ratio: 1;
-            min-height: 0;
-            width: 100%;
+            padding: 2px;
         }
 
         .group-label {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: bold;
             color: var(--text-muted);
             background: rgba(58, 121, 94, 0.1);
             border-radius: 4px;
-            padding: 3px;
-            aspect-ratio: 1;
-            min-height: 0;
-            width: 100%;
-            margin-bottom: 0;
+            padding: 2px;
+            margin-bottom: 3px;
         }
 
         .cell {
@@ -1090,7 +1084,314 @@
         };
 
         // Funcionalidad de búsqueda
-        // ... (resto del código JavaScript permanece igual)
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            searchResults.innerHTML = '';
+            
+            if (searchTerm.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+            
+            const allElements = [...elements, ...lanthanides, ...actinides];
+            const matches = allElements.filter(el => 
+                el.name.toLowerCase().includes(searchTerm) ||
+                el.sym.toLowerCase().includes(searchTerm) ||
+                el.z.toString().includes(searchTerm)
+            );
+            
+            if (matches.length > 0) {
+                matches.forEach(el => {
+                    const item = document.createElement('div');
+                    item.className = 'search-result-item';
+                    item.innerHTML = `
+                        <span class="sym">${el.sym}</span>
+                        <span class="name">${el.name}</span>
+                        <span class="z">${el.z}</span>
+                    `;
+                    item.addEventListener('click', () => {
+                        showElementInfo(el);
+                        searchResults.style.display = 'none';
+                        searchInput.value = '';
+                    });
+                    searchResults.appendChild(item);
+                });
+                searchResults.style.display = 'block';
+            } else {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // Mostrar información del elemento
+        function showElementInfo(el) {
+            document.getElementById('elementName').textContent = el.name;
+            document.getElementById('elementZ').textContent = `Z = ${el.z}`;
+            document.getElementById('elementSquare').textContent = el.sym;
+            document.getElementById('elementSquare').style.background = getGroupColor(el.group);
+            
+            document.getElementById('detailZ').textContent = el.z;
+            document.getElementById('detailMass').textContent = el.mass ? el.mass + ' u' : '—';
+            document.getElementById('detailVal').textContent = (el.val && el.val.length) ? el.val.join(', ') : '—';
+            document.getElementById('detailConfig').textContent = el.config || '—';
+            
+            const electronegDisplay = document.getElementById('detailElectroneg');
+            if (el.electroneg && el.electroneg > 0) {
+                electronegDisplay.textContent = el.electroneg.toFixed(2);
+            } else {
+                electronegDisplay.textContent = 'Ezezaguna';
+            }
+            
+            const radiusDisplay = document.getElementById('detailRadius');
+            if (el.radius && el.radius > 0) {
+                radiusDisplay.textContent = el.radius + ' pm';
+            } else {
+                radiusDisplay.textContent = 'Ezezaguna';
+            }
+            
+            const ionizationDisplay = document.getElementById('detailIonization');
+            if (el.ionization && el.ionization > 0) {
+                ionizationDisplay.textContent = el.ionization + ' kJ/mol';
+            } else {
+                ionizationDisplay.textContent = 'Ezezaguna';
+            }
+            
+            elementInfo.style.display = 'block';
+        }
+
+        // Obtener color por grupo
+        function getGroupClass(group) {
+            switch(group) {
+                case 'alkali': return 'alkali';
+                case 'alkaline': return 'alkaline';
+                case 'lanthanide': return 'lanthanide';
+                case 'actinide': return 'actinide';
+                case 'transition': return 'transition';
+                case 'post-transition': return 'post-transition';
+                case 'metalloid': return 'metalloid';
+                case 'nonmetal': return 'nonmetal';
+                case 'halogen': return 'halogen';
+                case 'noble': return 'noble';
+                default: return 'other';
+            }
+        }
+
+        function getGroupColor(group) {
+            switch(group) {
+                case 'alkali': return '#FFB6C1';
+                case 'alkaline': return '#FFD8B1';
+                case 'lanthanide': return '#C9E4DE';
+                case 'actinide': return '#D8BFD8';
+                case 'transition': return '#B0E0E6';
+                case 'post-transition': return '#E6E6FA';
+                case 'metalloid': return '#98FB98';
+                case 'nonmetal': return '#F0E68C';
+                case 'halogen': return '#FFDEAD';
+                case 'noble': return '#DDA0DD';
+                default: return '#F5F5F5';
+            }
+        }
+
+        // Determinar bloque electrónico
+        function getElectronBlock(element) {
+            const group = element.x;
+            
+            // Excepción: Helio es bloque s aunque esté en el grupo 18
+            if (element.z === 2) return 's-block';
+            
+            // Basado en la posición en la tabla periódica
+            if (element.group === 'lanthanide' || element.group === 'actinide') {
+                return 'f-block';
+            } else if (group >= 3 && group <= 12) {
+                return 'd-block';
+            } else if (group >= 13 && group <= 18) {
+                return 'p-block';
+            } else if (group >= 1 && group <= 2) {
+                return 's-block';
+            }
+            
+            return 's-block'; // default
+        }
+
+        // Aplicar colores por bloques electrónicos
+        function applyElectronBlockColors() {
+            allCells.forEach(cell => {
+                const z = parseInt(cell.dataset.z);
+                let element;
+                
+                // Encontrar el elemento en el conjunto de datos apropiado
+                if (z >= 57 && z <= 71) {
+                    element = lanthanides.find(el => el.z === z);
+                } else if (z >= 89 && z <= 103) {
+                    element = actinides.find(el => el.z === z);
+                } else {
+                    element = elements.find(el => el.z === z);
+                }
+                
+                if (element) {
+                    const block = getElectronBlock(element);
+                    
+                    // Remover clases anteriores
+                    cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
+                                         'electroneg-low', 'electroneg-medium', 'electroneg-high',
+                                         'radius-very-small', 'radius-small', 'radius-medium-small', 'radius-medium', 'radius-medium-large', 'radius-large', 'radius-very-large',
+                                         'ionization-very-low', 'ionization-low', 'ionization-medium-low', 'ionization-medium', 'ionization-medium-high', 'ionization-high', 'ionization-very-high');
+                    
+                    // Aplicar nueva clase de bloque
+                    cell.classList.add(block);
+                }
+            });
+        }
+
+        // Aplicar colores por electronegatividad
+        function applyElectronegativityColors() {
+            allCells.forEach(cell => {
+                const z = parseInt(cell.dataset.z);
+                let element;
+                
+                // Encontrar el elemento en el conjunto de datos apropiado
+                if (z >= 57 && z <= 71) {
+                    element = lanthanides.find(el => el.z === z);
+                } else if (z >= 89 && z <= 103) {
+                    element = actinides.find(el => el.z === z);
+                } else {
+                    element = elements.find(el => el.z === z);
+                }
+                
+                if (element) {
+                    // Remover clases anteriores
+                    cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
+                                         'electroneg-low', 'electroneg-medium', 'electroneg-high',
+                                         'radius-very-small', 'radius-small', 'radius-medium-small', 'radius-medium', 'radius-medium-large', 'radius-large', 'radius-very-large',
+                                         'ionization-very-low', 'ionization-low', 'ionization-medium-low', 'ionization-medium', 'ionization-medium-high', 'ionization-high', 'ionization-very-high');
+                    
+                    // Aplicar color basado en electronegatividad
+                    if (element.electroneg === 0) {
+                        cell.classList.add('electroneg-low');
+                    } else if (element.electroneg < 2.0) {
+                        cell.classList.add('electroneg-low');
+                    } else if (element.electroneg < 3.0) {
+                        cell.classList.add('electroneg-medium');
+                    } else {
+                        cell.classList.add('electroneg-high');
+                    }
+                }
+            });
+        }
+
+        // Aplicar colores por radio atómico - MEJORADO CON MÁS TONALIDADES
+        function applyAtomicRadiusColors() {
+            allCells.forEach(cell => {
+                const z = parseInt(cell.dataset.z);
+                let element;
+                
+                // Encontrar el elemento en el conjunto de datos apropiado
+                if (z >= 57 && z <= 71) {
+                    element = lanthanides.find(el => el.z === z);
+                } else if (z >= 89 && z <= 103) {
+                    element = actinides.find(el => el.z === z);
+                } else {
+                    element = elements.find(el => el.z === z);
+                }
+                
+                if (element) {
+                    // Remover clases anteriores
+                    cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
+                                         'electroneg-low', 'electroneg-medium', 'electroneg-high',
+                                         'radius-very-small', 'radius-small', 'radius-medium-small', 'radius-medium', 'radius-medium-large', 'radius-large', 'radius-very-large',
+                                         'ionization-very-low', 'ionization-low', 'ionization-medium-low', 'ionization-medium', 'ionization-medium-high', 'ionization-high', 'ionization-very-high');
+                    
+                    // Aplicar color basado en radio atómico con más gradación
+                    if (element.radius === 0) {
+                        cell.classList.add('radius-very-small');
+                    } else if (element.radius < 60) {
+                        cell.classList.add('radius-very-small');
+                    } else if (element.radius < 90) {
+                        cell.classList.add('radius-small');
+                    } else if (element.radius < 120) {
+                        cell.classList.add('radius-medium-small');
+                    } else if (element.radius < 160) {
+                        cell.classList.add('radius-medium');
+                    } else if (element.radius < 200) {
+                        cell.classList.add('radius-medium-large');
+                    } else if (element.radius < 250) {
+                        cell.classList.add('radius-large');
+                    } else {
+                        cell.classList.add('radius-very-large');
+                    }
+                }
+            });
+        }
+
+        // Aplicar colores por energía de ionización - MEJORADO CON MÁS TONALIDADES
+        function applyIonizationColors() {
+            allCells.forEach(cell => {
+                const z = parseInt(cell.dataset.z);
+                let element;
+                
+                // Encontrar el elemento en el conjunto de datos apropiado
+                if (z >= 57 && z <= 71) {
+                    element = lanthanides.find(el => el.z === z);
+                } else if (z >= 89 && z <= 103) {
+                    element = actinides.find(el => el.z === z);
+                } else {
+                    element = elements.find(el => el.z === z);
+                }
+                
+                if (element) {
+                    // Remover clases anteriores
+                    cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
+                                         'electroneg-low', 'electroneg-medium', 'electroneg-high',
+                                         'radius-very-small', 'radius-small', 'radius-medium-small', 'radius-medium', 'radius-medium-large', 'radius-large', 'radius-very-large',
+                                         'ionization-very-low', 'ionization-low', 'ionization-medium-low', 'ionization-medium', 'ionization-medium-high', 'ionization-high', 'ionization-very-high');
+                    
+                    // Aplicar color basado en energía de ionización con más gradación
+                    if (element.ionization === 0) {
+                        cell.classList.add('ionization-very-low');
+                    } else if (element.ionization < 500) {
+                        cell.classList.add('ionization-very-low');
+                    } else if (element.ionization < 700) {
+                        cell.classList.add('ionization-low');
+                    } else if (element.ionization < 900) {
+                        cell.classList.add('ionization-medium-low');
+                    } else if (element.ionization < 1100) {
+                        cell.classList.add('ionization-medium');
+                    } else if (element.ionization < 1300) {
+                        cell.classList.add('ionization-medium-high');
+                    } else if (element.ionization < 1500) {
+                        cell.classList.add('ionization-high');
+                    } else {
+                        cell.classList.add('ionization-very-high');
+                    }
+                }
+            });
+        }
+
+        // Restaurar colores normales
+        function restoreNormalColors() {
+            allCells.forEach(cell => {
+                // Remover todas las clases de color especiales
+                cell.classList.remove('s-block', 'p-block', 'd-block', 'f-block', 
+                                     'electroneg-low', 'electroneg-medium', 'electroneg-high',
+                                     'radius-very-small', 'radius-small', 'radius-medium-small', 'radius-medium', 'radius-medium-large', 'radius-large', 'radius-very-large',
+                                     'ionization-very-low', 'ionization-low', 'ionization-medium-low', 'ionization-medium', 'ionization-medium-high', 'ionization-high', 'ionization-very-high');
+                
+                // Restaurar color original basado en grupo
+                const z = parseInt(cell.dataset.z);
+                let element;
+                
+                if (z >= 57 && z <= 71) {
+                    element = lanthanides.find(el => el.z === z);
+                } else if (z >= 89 && z <= 103) {
+                    element = actinides.find(el => el.z === z);
+                } else {
+                    element = elements.find(el => el.z === z);
+                }
+                
+                if (element) {
+                    cell.classList.add(getGroupClass(element.group));
+                }
+            });
+        }
 
         // Crear tabla periódica con grupos y periodos
         function createPeriodicTable() {
@@ -1214,6 +1515,7 @@
                 allCells.push(cell);
             });
         }
+
         // Funciones para cambiar entre pantallas
         function showScreen(screen) {
             mainScreen.style.display = 'none';
@@ -1544,8 +1846,6 @@
         // Inicialización
         createPeriodicTable();
         showElementInfo(elements[0]);
-        // ... (resto del código JavaScript permanece igual)
     </script>
 </body>
 </html>
-
