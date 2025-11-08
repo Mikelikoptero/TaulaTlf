@@ -207,7 +207,7 @@
             color: var(--text-light);
         }
 
-        /* Pantalla de tabla periódica - MEJORADA */
+        /* Pantalla de tabla periódica - VERTICAL MEJORADA */
         .table-screen {
             display: none;
             height: 100vh;
@@ -337,10 +337,9 @@
             min-width: 850px; /* Ancho mínimo para que quepa toda la tabla */
         }
 
-        /* CORRECCIÓN: Estructura de tabla mejorada */
         .periodic {
             display: grid;
-            grid-template-columns: 40px repeat(18, 1fr); /* Columna para periodos + 18 grupos */
+            grid-template-columns: repeat(19, 1fr); /* 18 grupos + 1 columna para periodos */
             gap: 3px;
             margin-bottom: 15px;
         }
@@ -356,7 +355,6 @@
             border-radius: 4px;
             padding: 6px 2px;
             min-height: 44px;
-            width: 100%; /* Asegurar mismo ancho que las celdas */
         }
 
         .group-label {
@@ -370,7 +368,6 @@
             border-radius: 4px;
             padding: 6px 2px;
             min-height: 30px;
-            width: 100%; /* Asegurar mismo ancho que las celdas */
         }
 
         .cell {
@@ -387,7 +384,7 @@
             transition: all 0.3s ease;
             aspect-ratio: 1;
             min-height: 0;
-            min-width: 0; /* Permitir que se reduzcan */
+            width: 100%; /* Asegurar mismo ancho */
         }
 
         .cell .num {
@@ -425,14 +422,15 @@
         }
 
         .bottom-series {
-            display: grid;
-            grid-template-columns: 40px repeat(15, 1fr); /* Etiqueta + 15 elementos */
+            display: flex;
             gap: 3px;
             background: linear-gradient(180deg, #111111, #151515);
             padding: 8px;
             border-radius: 6px;
             border: 1px solid rgba(58, 121, 94, 0.2);
-            margin-bottom: 10px;
+            justify-content: flex-start; /* Alinear a la izquierda */
+            flex-wrap: nowrap;
+            overflow-x: auto;
         }
 
         /* Añadir espacios vacíos para alinear */
@@ -738,7 +736,7 @@
         </div>
     </div>
     
-    <!-- Pantalla de tabla periódica - MEJORADA -->
+    <!-- Pantalla de tabla periódica - VERTICAL MEJORADA -->
     <div class="table-screen" id="tableScreen">
         <div class="table-container">
             <div class="table-header">
@@ -1396,56 +1394,56 @@
             });
         }
 
-        // CORRECCIÓN: Función mejorada para crear la tabla periódica
+        // Crear tabla periódica con grupos y periodos
         function createPeriodicTable() {
             table.innerHTML = '';
             lanthanidesContainer.innerHTML = '';
             actinidesContainer.innerHTML = '';
             allCells = [];
             
-            // CORRECCIÓN: Crear fila de encabezados de grupos (1-18)
+            // Crear encabezados de grupos (columnas)
             const groupRow = document.createElement('div');
+            groupRow.style.gridColumn = '1 / span 19';
             groupRow.style.display = 'grid';
-            groupRow.style.gridTemplateColumns = '40px repeat(18, 1fr)'; /* Mismo grid que la tabla */
+            groupRow.style.gridTemplateColumns = 'repeat(19, 1fr)';
             groupRow.style.gap = '3px';
             groupRow.style.marginBottom = '3px';
             
-            // Celda vacía para la esquina superior izquierda (donde iría el período 0)
+            // Celda vacía para la esquina superior izquierda
             const cornerCell = document.createElement('div');
-            cornerCell.style.minHeight = '30px';
+            cornerCell.style.gridColumn = '1';
             groupRow.appendChild(cornerCell);
             
-            // CORRECCIÓN: Crear etiquetas de grupos (1-18) en las columnas correctas
-            for (let group = 1; group <= 18; group++) {
+            // Crear etiquetas de grupos (1-18)
+            for (let i = 1; i <= 18; i++) {
                 const groupLabel = document.createElement('div');
                 groupLabel.className = 'group-label';
-                groupLabel.textContent = group;
+                groupLabel.textContent = i;
+                groupLabel.style.gridColumn = i + 1;
                 groupRow.appendChild(groupLabel);
             }
             
             table.appendChild(groupRow);
             
-            // CORRECCIÓN: Crear celdas de la tabla principal con la estructura correcta
+            // Crear celdas de la tabla principal
             for (let period = 1; period <= 7; period++) {
-                const row = document.createElement('div');
-                row.style.display = 'grid';
-                row.style.gridTemplateColumns = '40px repeat(18, 1fr)';
-                row.style.gap = '3px';
-                row.style.marginBottom = '3px';
-                
                 // Crear etiqueta de período
                 const periodLabel = document.createElement('div');
                 periodLabel.className = 'period-label';
                 periodLabel.textContent = period;
-                row.appendChild(periodLabel);
+                periodLabel.style.gridColumn = 1;
+                periodLabel.style.gridRow = period + 1;
+                table.appendChild(periodLabel);
                 
-                // CORRECCIÓN: Crear elementos del período en las columnas correctas
+                // Crear elementos del período
                 for (let group = 1; group <= 18; group++) {
                     const element = elements.find(el => el.x === group && el.y === period);
                     
                     if (element) {
                         const cell = document.createElement('div');
                         cell.className = `cell ${getGroupClass(element.group)}`;
+                        cell.style.gridColumn = group + 1;
+                        cell.style.gridRow = period + 1;
                         cell.dataset.z = element.z;
                         cell.innerHTML = `
                             <div class="num">${element.z}</div>
@@ -1456,28 +1454,20 @@
                             showElementInfo(element);
                             showScreen('main');
                         });
-                        row.appendChild(cell);
+                        table.appendChild(cell);
                         allCells.push(cell);
                     } else {
                         // Crear celda vacía si no hay elemento
                         const emptyCell = document.createElement('div');
-                        emptyCell.style.minHeight = '44px';
-                        row.appendChild(emptyCell);
+                        emptyCell.style.gridColumn = group + 1;
+                        emptyCell.style.gridRow = period + 1;
+                        table.appendChild(emptyCell);
                     }
                 }
-                
-                table.appendChild(row);
             }
             
-            // CORRECCIÓN: Crear lantánidos - MEJOR ALINEADO
-            // Añadir etiqueta "Lantánidos"
-            const lanthanideLabel = document.createElement('div');
-            lanthanideLabel.className = 'period-label';
-            lanthanideLabel.textContent = 'Lantánidos';
-            lanthanideLabel.style.gridColumn = '1';
-            lanthanidesContainer.appendChild(lanthanideLabel);
-            
-            // Añadir espacios vacíos para alinear correctamente
+            // Crear lantánidos - SIMPLE Y ALINEADO A LA IZQUIERDA
+            // Añadir 2 espacios vacíos al principio
             for (let i = 0; i < 2; i++) {
                 const space = document.createElement('div');
                 space.className = 'space-cell';
@@ -1501,15 +1491,8 @@
                 allCells.push(cell);
             });
             
-            // CORRECCIÓN: Crear actínidos - MEJOR ALINEADO
-            // Añadir etiqueta "Actínidos"
-            const actinideLabel = document.createElement('div');
-            actinideLabel.className = 'period-label';
-            actinideLabel.textContent = 'Actínidos';
-            actinideLabel.style.gridColumn = '1';
-            actinidesContainer.appendChild(actinideLabel);
-            
-            // Añadir espacios vacíos para alinear correctamente
+            // Crear actínidos - SIMPLE Y ALINEADO A LA IZQUIERDA
+            // Añadir 2 espacios vacíos al principio
             for (let i = 0; i < 2; i++) {
                 const space = document.createElement('div');
                 space.className = 'space-cell';
@@ -1532,16 +1515,6 @@
                 actinidesContainer.appendChild(cell);
                 allCells.push(cell);
             });
-            
-            // CORRECCIÓN: Aplicar estilos de grid a los contenedores de series
-            lanthanidesContainer.style.display = 'grid';
-            lanthanidesContainer.style.gridTemplateColumns = '40px repeat(15, 1fr)'; /* Etiqueta + 15 elementos */
-            lanthanidesContainer.style.gap = '3px';
-            lanthanidesContainer.style.marginBottom = '10px';
-            
-            actinidesContainer.style.display = 'grid';
-            actinidesContainer.style.gridTemplateColumns = '40px repeat(15, 1fr)'; /* Etiqueta + 15 elementos */
-            actinidesContainer.style.gap = '3px';
         }
 
         // Funciones para cambiar entre pantallas
@@ -1877,3 +1850,4 @@
     </script>
 </body>
 </html>
+
