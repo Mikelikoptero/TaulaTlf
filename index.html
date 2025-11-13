@@ -454,11 +454,20 @@
             justify-content: flex-start;
             flex-wrap: nowrap;
             overflow-x: auto;
+            align-items: center;
         }
 
-        /* ESPACIOS VACÍOS CORREGIDOS - 2 espacios para alinear con grupo 3 */
+        /* ESPACIOS VACÍOS CORREGIDOS - ahora 3 espacios para alinear con grupo 3 */
         .space-cell {
             width: var(--cell-size);
+            height: var(--cell-size);
+            flex-shrink: 0;
+            opacity: 0;
+        }
+
+        /* ESPACIO PARA ETIQUETAS DE PERÍODOS */
+        .period-space-cell {
+            width: 40px;
             height: var(--cell-size);
             flex-shrink: 0;
             opacity: 0;
@@ -1162,6 +1171,11 @@
             }
             
             // CREAR LANTÁNIDOS - CORREGIDA POSICIÓN (empiezan en grupo 3)
+            // Añadir espacio para etiquetas de período (40px)
+            const periodSpace = document.createElement('div');
+            periodSpace.className = 'period-space-cell';
+            lanthanidesContainer.appendChild(periodSpace);
+            
             // Añadir 2 espacios vacíos para alinear con grupo 3
             for (let i = 0; i < 2; i++) {
                 const space = document.createElement('div');
@@ -1187,6 +1201,11 @@
             });
             
             // CREAR ACTÍNIDOS - CORREGIDA POSICIÓN (empiezan en grupo 3)
+            // Añadir espacio para etiquetas de período (40px)
+            const periodSpace2 = document.createElement('div');
+            periodSpace2.className = 'period-space-cell';
+            actinidesContainer.appendChild(periodSpace2);
+            
             // Añadir 2 espacios vacíos para alinear con grupo 3
             for (let i = 0; i < 2; i++) {
                 const space = document.createElement('div');
