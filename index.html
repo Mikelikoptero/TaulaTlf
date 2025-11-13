@@ -454,32 +454,14 @@
             justify-content: flex-start;
             flex-wrap: nowrap;
             overflow-x: auto;
-            align-items: center;
         }
 
-        /* ESPACIOS VACÍOS CORREGIDOS - ahora 3 espacios para alinear con grupo 3 */
+        /* ESPACIOS VACÍOS CORREGIDOS - 2 espacios para alinear con grupo 3 */
         .space-cell {
             width: var(--cell-size);
             height: var(--cell-size);
             flex-shrink: 0;
             opacity: 0;
-        }
-
-        /* ETIQUETAS PARA SERIES INFERIORES */
-        .series-label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-            color: var(--text-muted);
-            background: rgba(58, 121, 94, 0.1);
-            border-radius: 4px;
-            padding: 8px 4px;
-            height: var(--cell-size);
-            width: 60px;
-            margin-right: 10px;
-            flex-shrink: 0;
         }
 
         /* Colores de categorías */
@@ -543,11 +525,6 @@
             
             .period-label, .group-label {
                 font-size: 12px;
-            }
-            
-            .series-label {
-                font-size: 10px;
-                width: 50px;
             }
         }
     </style>
@@ -1185,14 +1162,8 @@
             }
             
             // CREAR LANTÁNIDOS - CORREGIDA POSICIÓN (empiezan en grupo 3)
-            // Añadir etiqueta "Lantánidos"
-            const lanthanideLabel = document.createElement('div');
-            lanthanideLabel.className = 'series-label';
-            lanthanideLabel.textContent = 'Lantánidos';
-            lanthanidesContainer.appendChild(lanthanideLabel);
-            
-            // Añadir 3 espacios vacíos para alinear con grupo 3 (columna 4 en el grid)
-            for (let i = 0; i < 3; i++) {
+            // Añadir 2 espacios vacíos para alinear con grupo 3
+            for (let i = 0; i < 2; i++) {
                 const space = document.createElement('div');
                 space.className = 'space-cell';
                 lanthanidesContainer.appendChild(space);
@@ -1216,14 +1187,8 @@
             });
             
             // CREAR ACTÍNIDOS - CORREGIDA POSICIÓN (empiezan en grupo 3)
-            // Añadir etiqueta "Actínidos"
-            const actinideLabel = document.createElement('div');
-            actinideLabel.className = 'series-label';
-            actinideLabel.textContent = 'Actínidos';
-            actinidesContainer.appendChild(actinideLabel);
-            
-            // Añadir 3 espacios vacíos para alinear con grupo 3 (columna 4 en el grid)
-            for (let i = 0; i < 3; i++) {
+            // Añadir 2 espacios vacíos para alinear con grupo 3
+            for (let i = 0; i < 2; i++) {
                 const space = document.createElement('div');
                 space.className = 'space-cell';
                 actinidesContainer.appendChild(space);
