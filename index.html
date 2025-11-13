@@ -256,18 +256,60 @@
             color: var(--text-light);
         }
 
-        .table-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto auto;
-            gap: 8px;
+        /* MENÚ RETRÁCTIL PARA CONTROLES */
+        .table-controls-collapsible {
             margin-bottom: 15px;
-            flex-wrap: wrap;
             position: sticky;
             top: 70px;
             background: var(--bg-dark);
-            padding: 10px 0;
             z-index: 10;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(58, 121, 94, 0.2);
+        }
+
+        .controls-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(58, 121, 94, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .controls-header:hover {
+            background: rgba(58, 121, 94, 0.15);
+        }
+
+        .controls-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .controls-icon {
+            color: var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .table-controls-collapsible.active .controls-icon {
+            transform: rotate(180deg);
+        }
+
+        .table-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 12px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .table-controls-collapsible.active .table-controls {
+            max-height: 200px;
+            padding: 12px;
         }
 
         .control-toggle {
@@ -284,33 +326,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        /* Posicionamiento específico de cada botón */
-        #toggleNormal {
-            grid-column: 1;
-            grid-row: 1;
-        }
-
-        #toggleElec {
-            grid-column: 2;
-            grid-row: 1;
-        }
-
-        #toggleRadius {
-            grid-column: 1;
-            grid-row: 2;
-        }
-
-        #toggleIonization {
-            grid-column: 2;
-            grid-row: 2;
-        }
-
-        #toggleElectroneg {
-            grid-column: 1 / span 2; /* Ocupa ambas columnas */
-            grid-row: 3;
-            margin-top: 4px;
         }
 
         .control-toggle.active {
@@ -567,12 +582,19 @@
                 <div style="width: 40px;"></div> <!-- Espacio para alinear -->
             </div>
             
-            <div class="table-controls">
-                <button class="control-toggle" id="toggleElec">Orbitalak</button>
-                <button class="control-toggle" id="toggleElectroneg">Elektronegatibitatea</button>
-                <button class="control-toggle" id="toggleRadius">Erradioa</button>
-                <button class="control-toggle" id="toggleIonization">Ionizazioa</button>
-                <button class="control-toggle active" id="toggleNormal" style="flex: 0 0 auto;">Familia</button>
+            <!-- MENÚ RETRÁCTIL PARA CONTROLES -->
+            <div class="table-controls-collapsible" id="controlsCollapsible">
+                <div class="controls-header">
+                    <div class="controls-title">Kolore Esquemak</div>
+                    <div class="controls-icon">▼</div>
+                </div>
+                <div class="table-controls">
+                    <button class="control-toggle active" id="toggleNormal">Familia</button>
+                    <button class="control-toggle" id="toggleElec">Orbitalak</button>
+                    <button class="control-toggle" id="toggleRadius">Erradioa</button>
+                    <button class="control-toggle" id="toggleIonization">Ionizazioa</button>
+                    <button class="control-toggle" id="toggleElectroneg">Elektronegatibitatea</button>
+                </div>
             </div>
             
             <div class="periodic-table-container">
@@ -725,6 +747,7 @@
         const showTableBtn = document.getElementById('showTableBtn');
         const showOrbitalsBtn = document.getElementById('showOrbitalsBtn');
         const backFromTableBtn = document.getElementById('backFromTableBtn');
+        const controlsCollapsible = document.getElementById('controlsCollapsible');
         const toggleElec = document.getElementById('toggleElec');
         const toggleElectroneg = document.getElementById('toggleElectroneg');
         const toggleRadius = document.getElementById('toggleRadius');
@@ -1202,6 +1225,11 @@
 
         backFromTableBtn.addEventListener('click', () => {
             showScreen('main');
+        });
+
+        // Toggle para menú retráctil
+        controlsCollapsible.addEventListener('click', function() {
+            this.classList.toggle('active');
         });
 
         // Toggles para cambiar modo de visualización de la tabla
