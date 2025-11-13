@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taula periodikoa — Euskera (Mugikorra)</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.min.js"></script>
     <style>
         :root {
             --primary-color: #3A795E;
@@ -481,181 +478,6 @@
         .ionization-high { background: linear-gradient(135deg, #b71c1c, #8b0000) !important; color: #fff; }
         .ionization-very-high { background: linear-gradient(135deg, #8b0000, #5a0000) !important; color: #fff; }
 
-        /* Pantalla de orbitales 3D */
-        .orbitals-screen {
-            display: none;
-            height: 100vh;
-            padding: 20px;
-            overflow: hidden;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: var(--bg-dark);
-            z-index: 100;
-        }
-
-        .orbitals-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .orbitals-title {
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--text-light);
-        }
-
-        .orbitals-categories {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .orbital-category {
-            background: linear-gradient(180deg, var(--bg-card), #0d0d0d);
-            border-radius: 10px;
-            border: 1px solid rgba(58, 121, 94, 0.2);
-            overflow: hidden;
-        }
-
-        .orbital-category-header {
-            padding: 14px 16px;
-            background: rgba(58, 121, 94, 0.1);
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .orbital-category-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .orbital-category-icon {
-            color: var(--primary-color);
-            transition: transform 0.3s ease;
-        }
-
-        .orbital-category.active .orbital-category-icon {
-            transform: rotate(180deg);
-        }
-
-        .orbital-list {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-
-        .orbital-category.active .orbital-list {
-            max-height: 500px;
-        }
-
-        .orbital-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-light);
-            padding: 12px 16px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-            width: 100%;
-            border-bottom: 1px solid rgba(58, 121, 94, 0.1);
-        }
-
-        .orbital-btn:last-child {
-            border-bottom: none;
-        }
-
-        .orbital-btn:hover {
-            background: rgba(58, 121, 94, 0.1);
-            padding-left: 20px;
-        }
-
-        .orbital-btn.active {
-            background: rgba(58, 121, 94, 0.2);
-            box-shadow: inset 0 0 10px rgba(58, 121, 94, 0.3);
-        }
-
-        .orbital-viewer {
-            flex: 1;
-            background: #0a0a0a;
-            border-radius: 10px;
-            border: 1px solid rgba(58, 121, 94, 0.2);
-            position: relative;
-            overflow: hidden;
-            margin-top: 20px;
-            display: none;
-            height: 300px;
-        }
-
-        .orbital-canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .orbital-info {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(17, 17, 17, 0.8);
-            padding: 10px 14px;
-            border-radius: 8px;
-            border: 1px solid rgba(58, 121, 94, 0.2);
-            max-width: 80%;
-        }
-
-        .orbital-info-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 4px;
-        }
-
-        .orbital-info-desc {
-            font-size: 12px;
-            color: var(--text-light);
-            line-height: 1.3;
-        }
-
-        .orbital-controls {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            display: flex;
-            gap: 8px;
-        }
-
-        .orbital-control-btn {
-            background: rgba(58, 121, 94, 0.2);
-            border: none;
-            color: var(--text-light);
-            width: 36px;
-            height: 36px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .orbital-loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: var(--text-light);
-            font-size: 16px;
-        }
-
         /* Responsive */
         @media (max-width: 480px) {
             .function-buttons {
@@ -761,86 +583,6 @@
                         <div class="bottom-series" id="actinides"></div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Pantalla de orbitales 3D -->
-    <div class="orbitals-screen" id="orbitalsScreen">
-        <div class="orbitals-header">
-            <button class="back-btn" id="backFromOrbitalsBtn">←</button>
-            <div class="orbitals-title">Orbital Atomikoak</div>
-        </div>
-        
-        <div class="orbitals-categories">
-            <!-- Categoría s -->
-            <div class="orbital-category" id="category-s">
-                <div class="orbital-category-header">
-                    <div class="orbital-category-title">s Orbitala</div>
-                    <div class="orbital-category-icon">▼</div>
-                </div>
-                <div class="orbital-list">
-                    <button class="orbital-btn" data-model="s">s Orbitala</button>
-                </div>
-            </div>
-            
-            <!-- Categoría p -->
-            <div class="orbital-category" id="category-p">
-                <div class="orbital-category-header">
-                    <div class="orbital-category-title">p Orbitalak</div>
-                    <div class="orbital-category-icon">▼</div>
-                </div>
-                <div class="orbital-list">
-                    <button class="orbital-btn" data-model="p">p Orbitala</button>
-                    <button class="orbital-btn" data-model="px">pₓ Orbitala</button>
-                    <button class="orbital-btn" data-model="py">pᵧ Orbitala</button>
-                    <button class="orbital-btn" data-model="pz">p₂ Orbitala</button>
-                </div>
-            </div>
-            
-            <!-- Categoría d -->
-            <div class="orbital-category" id="category-d">
-                <div class="orbital-category-header">
-                    <div class="orbital-category-title">d Orbitalak</div>
-                    <div class="orbital-category-icon">▼</div>
-                </div>
-                <div class="orbital-list">
-                    <button class="orbital-btn" data-model="dxy">dₓᵧ Orbitala</button>
-                    <button class="orbital-btn" data-model="dx2y2">dₓ²₋ᵧ² Orbitala</button>
-                    <button class="orbital-btn" data-model="dyz">dᵧ₂ Orbitala</button>
-                    <button class="orbital-btn" data-model="dzx">d₂ₓ Orbitala</button>
-                    <button class="orbital-btn" data-model="dz2">d₂² Orbitala</button>
-                </div>
-            </div>
-            
-            <!-- Categoría f -->
-            <div class="orbital-category" id="category-f">
-                <div class="orbital-category-header">
-                    <div class="orbital-category-title">f Orbitalak</div>
-                    <div class="orbital-category-icon">▼</div>
-                </div>
-                <div class="orbital-list">
-                    <button class="orbital-btn" data-model="f1">f₁ Orbitala</button>
-                    <button class="orbital-btn" data-model="f2">f₂ Orbitala</button>
-                    <button class="orbital-btn" data-model="f3">f₃ Orbitala</button>
-                    <button class="orbital-btn" data-model="f4">f₄ Orbitala</button>
-                    <button class="orbital-btn" data-model="f5">f₅ Orbitala</button>
-                    <button class="orbital-btn" data-model="f6">f₆ Orbitala</button>
-                    <button class="orbital-btn" data-model="f7">f₇ Orbitala</button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="orbital-viewer" id="orbitalViewer">
-            <canvas class="orbital-canvas" id="orbitalCanvas"></canvas>
-            <div class="orbital-loading" id="orbitalLoading">Kargatzen...</div>
-            <div class="orbital-info" id="orbitalInfo">
-                <div class="orbital-info-title" id="orbitalInfoTitle">Orbital atomikoak</div>
-                <div class="orbital-info-desc" id="orbitalInfoDesc">Hautatu orbital bat menutik ikusteko.</div>
-            </div>
-            <div class="orbital-controls">
-                <button class="orbital-control-btn" id="resetOrbitalView">↺</button>
-                <button class="orbital-control-btn" id="autoRotateOrbital">▶</button>
             </div>
         </div>
     </div>
@@ -977,14 +719,12 @@
         // Referencias a elementos DOM
         const mainScreen = document.getElementById('mainScreen');
         const tableScreen = document.getElementById('tableScreen');
-        const orbitalsScreen = document.getElementById('orbitalsScreen');
         const searchInput = document.getElementById('searchInput');
         const searchResults = document.getElementById('searchResults');
         const elementInfo = document.getElementById('elementInfo');
         const showTableBtn = document.getElementById('showTableBtn');
         const showOrbitalsBtn = document.getElementById('showOrbitalsBtn');
         const backFromTableBtn = document.getElementById('backFromTableBtn');
-        const backFromOrbitalsBtn = document.getElementById('backFromOrbitalsBtn');
         const toggleElec = document.getElementById('toggleElec');
         const toggleElectroneg = document.getElementById('toggleElectroneg');
         const toggleRadius = document.getElementById('toggleRadius');
@@ -993,96 +733,10 @@
         const table = document.getElementById('table');
         const lanthanidesContainer = document.getElementById('lanthanides');
         const actinidesContainer = document.getElementById('actinides');
-        const orbitalViewer = document.getElementById('orbitalViewer');
-        const orbitalCanvas = document.getElementById('orbitalCanvas');
-        const orbitalLoading = document.getElementById('orbitalLoading');
-        const orbitalInfo = document.getElementById('orbitalInfo');
-        const orbitalInfoTitle = document.getElementById('orbitalInfoTitle');
-        const orbitalInfoDesc = document.getElementById('orbitalInfoDesc');
-        const resetOrbitalView = document.getElementById('resetOrbitalView');
-        const autoRotateOrbital = document.getElementById('autoRotateOrbital');
-        const orbitalButtons = document.querySelectorAll('.orbital-btn');
-        const categoryHeaders = document.querySelectorAll('.orbital-category-header');
 
         // Variables de estado
         let currentDisplayMode = 'normal';
-        let currentModel = null;
-        let isAutoRotating = false;
-        let scene, camera, renderer, controls;
-        let orbitalModels = {};
         let allCells = [];
-
-        // Información sobre los orbitales
-        const orbitalInfoData = {
-            's': {
-                title: 's Orbitala',
-                desc: 'Orbital esferikoa, simetria osoa du. Elektroi dentsitatea zentroan handiena da.'
-            },
-            'p': {
-                title: 'p Orbitalak',
-                desc: 'Orbital p guztien multzoa. Hiru orbital mota ditu: pₓ, pᵧ eta p₂, norabide bakoitzean orientatuak.'
-            },
-            'px': {
-                title: 'pₓ Orbitala',
-                desc: 'Orbital p bat, ardatz x-aren inguruan orientatuta. Bi lobulu ditu.'
-            },
-            'py': {
-                title: 'pᵧ Orbitala',
-                desc: 'Orbital p bat, ardatz y-aren inguruan orientatuta. Bi lobulu ditu.'
-            },
-            'pz': {
-                title: 'p₂ Orbitala',
-                desc: 'Orbital p bat, ardatz z-aren inguruan orientatuta. Bi lobulu ditu.'
-            },
-            'dxy': {
-                title: 'dₓᵧ Orbitala',
-                desc: 'Orbital d bat, ardatz x-y planoan kokatuta. Lau lobulu ditu.'
-            },
-            'dx2y2': {
-                title: 'dₓ²₋ᵧ² Orbitala',
-                desc: 'Orbital d bat, ardatz x eta y artean orientatuta. Lau lobulu ditu.'
-            },
-            'dyz': {
-                title: 'dᵧ₂ Orbitala',
-                desc: 'Orbital d bat, ardatz y-z planoan kokatuta. Lau lobulu ditu.'
-            },
-            'dzx': {
-                title: 'd₂ₓ Orbitala',
-                desc: 'Orbital d bat, ardatz z-x planoan kokatuta. Lau lobulu ditu.'
-            },
-            'dz2': {
-                title: 'd₂² Orbitala',
-                desc: 'Orbital d bat, ardatz z-aren inguruan orientatuta. Hiru lobulu ditu.'
-            },
-            'f1': {
-                title: 'f₁ Orbitala',
-                desc: 'Orbital f bat, konplexutasun handikoa. Zortzi lobulu ditu.'
-            },
-            'f2': {
-                title: 'f₂ Orbitala',
-                desc: 'Orbital f bat, konplexutasun handikoa. Zortzi lobulu ditu.'
-            },
-            'f3': {
-                title: 'f₃ Orbitala',
-                desc: 'Orbital f bat, konplexutasun handikoa. Zortzi lobulu ditu.'
-            },
-            'f4': {
-                title: 'f₄ Orbitala',
-                desc: 'Orbital f bat, konplexutasun handikoa. Zortzi lobulu ditu.'
-            },
-            'f5': {
-                title: 'f₅ Orbitala',
-                desc: 'Orbital f bat, konplexutasun handikoa. Zortzi lobulu ditu.'
-            },
-            'f6': {
-                title: 'f₆ Orbitala',
-                desc: 'Orbital f bat, konplexutasun handikoa. Zortzi lobulu ditu.'
-            },
-            'f7': {
-                title: 'f₇ Orbitala',
-                desc: 'Orbital f bat, konplexutasun handikoa. Zortzi lobulu ditu.'
-            }
-        };
 
         // Funcionalidad de búsqueda
         searchInput.addEventListener('input', function() {
@@ -1521,7 +1175,6 @@
         function showScreen(screen) {
             mainScreen.style.display = 'none';
             tableScreen.style.display = 'none';
-            orbitalsScreen.style.display = 'none';
             
             switch(screen) {
                 case 'main':
@@ -1533,194 +1186,7 @@
                     toggleNormal.classList.add('active');
                     restoreNormalColors();
                     break;
-                case 'orbitals':
-                    orbitalsScreen.style.display = 'block';
-                    break;
             }
-        }
-
-        // Inicializar visualizador 3D de orbitales
-        function initOrbitalViewer() {
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0a0a0a);
-            
-            camera = new THREE.PerspectiveCamera(75, orbitalCanvas.clientWidth / orbitalCanvas.clientHeight, 0.1, 1000);
-            camera.position.z = 150;
-            
-            renderer = new THREE.WebGLRenderer({ 
-                canvas: orbitalCanvas, 
-                antialias: true,
-                alpha: true 
-            });
-            renderer.setSize(orbitalCanvas.clientWidth, orbitalCanvas.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            
-            controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambientLight);
-            
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(1, 1, 1);
-            scene.add(directionalLight);
-            
-            function animate() {
-                requestAnimationFrame(animate);
-                
-                if (isAutoRotating && currentModel) {
-                    currentModel.rotation.y -= 0.005;
-                }
-                
-                controls.update();
-                renderer.render(scene, camera);
-            }
-            
-            animate();
-            
-            window.addEventListener('resize', () => {
-                camera.aspect = orbitalCanvas.clientWidth / orbitalCanvas.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(orbitalCanvas.clientWidth, orbitalCanvas.clientHeight);
-            });
-        }
-
-        // Cargar modelo de orbital
-        function loadOrbitalModel(modelName) {
-            orbitalLoading.style.display = 'block';
-            orbitalInfo.style.display = 'none';
-            
-            if (currentModel) {
-                scene.remove(currentModel);
-                currentModel = null;
-            }
-            
-            if (orbitalModels[modelName]) {
-                currentModel = orbitalModels[modelName].clone();
-                scene.add(currentModel);
-                orbitalLoading.style.display = 'none';
-                orbitalInfo.style.display = 'block';
-                updateOrbitalInfo(modelName);
-                return;
-            }
-            
-            // URL del modelo
-            const modelUrl = `https://raw.githubusercontent.com/Mikelikoptero/Taularako-argazkiak/main/Orbitalak2/${modelName}.glb`;
-            
-            const loader = new THREE.GLTFLoader();
-            
-            loader.load(
-                modelUrl,
-                function(gltf) {
-                    const model = gltf.scene;
-                    model.scale.set(1, 1, 1);
-                    model.position.set(0, 0, 0);
-                    scene.add(model);
-                    currentModel = model;
-                    orbitalModels[modelName] = model.clone();
-                    orbitalLoading.style.display = 'none';
-                    orbitalInfo.style.display = 'block';
-                    updateOrbitalInfo(modelName);
-                },
-                function(xhr) {
-                    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-                },
-                function(error) {
-                    console.error('Error loading model:', error);
-                    orbitalLoading.textContent = 'Errorea modelo kargatzean';
-                    createAlternativeRepresentation(modelName);
-                }
-            );
-        }
-
-        // Crear representación alternativa si falla la carga
-        function createAlternativeRepresentation(modelName) {
-            orbitalLoading.style.display = 'none';
-            orbitalInfo.style.display = 'block';
-            
-            let geometry, material;
-            
-            if (modelName === 's') {
-                geometry = new THREE.SphereGeometry(1, 32, 32);
-                material = new THREE.MeshPhongMaterial({ 
-                    color: 0xff6b6b, 
-                    transparent: true, 
-                    opacity: 0.7,
-                    wireframe: true
-                });
-                currentModel = new THREE.Mesh(geometry, material);
-            } else if (modelName.startsWith('p')) {
-                geometry = new THREE.SphereGeometry(0.5, 16, 16);
-                material = new THREE.MeshPhongMaterial({ 
-                    color: 0x6b8cff, 
-                    transparent: true, 
-                    opacity: 0.7,
-                    wireframe: true
-                });
-                
-                const lobe1 = new THREE.Mesh(geometry, material);
-                const lobe2 = new THREE.Mesh(geometry, material);
-                
-                if (modelName === 'px') {
-                    lobe1.position.x = 1.5;
-                    lobe2.position.x = -1.5;
-                } else if (modelName === 'py') {
-                    lobe1.position.y = 1.5;
-                    lobe2.position.y = -1.5;
-                } else if (modelName === 'pz') {
-                    lobe1.position.z = 1.5;
-                    lobe2.position.z = -1.5;
-                }
-                
-                const group = new THREE.Group();
-                group.add(lobe1);
-                group.add(lobe2);
-                currentModel = group;
-            } else if (modelName.startsWith('d')) {
-                geometry = new THREE.TorusGeometry(1, 0.3, 16, 32);
-                material = new THREE.MeshPhongMaterial({ 
-                    color: 0x6bff8c, 
-                    transparent: true, 
-                    opacity: 0.7,
-                    wireframe: true
-                });
-                currentModel = new THREE.Mesh(geometry, material);
-            } else {
-                geometry = new THREE.OctahedronGeometry(1, 1);
-                material = new THREE.MeshPhongMaterial({ 
-                    color: 0xff8c6b, 
-                    transparent: true, 
-                    opacity: 0.7,
-                    wireframe: true
-                });
-                currentModel = new THREE.Mesh(geometry, material);
-            }
-            
-            scene.add(currentModel);
-            orbitalModels[modelName] = currentModel.clone();
-            updateOrbitalInfo(modelName);
-        }
-
-        // Actualizar información del orbital
-        function updateOrbitalInfo(modelName) {
-            const info = orbitalInfoData[modelName] || {
-                title: `${modelName} Orbitala`,
-                desc: 'Orbital atomikoaren 3D errepresentazioa.'
-            };
-            
-            orbitalInfoTitle.textContent = info.title;
-            orbitalInfoDesc.textContent = info.desc;
-        }
-
-        // Inicializar menús retráctiles
-        function initCollapsibleMenus() {
-            categoryHeaders.forEach(header => {
-                header.addEventListener('click', function() {
-                    const category = this.parentElement;
-                    category.classList.toggle('active');
-                });
-            });
         }
 
         // Event listeners
@@ -1730,18 +1196,11 @@
         });
 
         showOrbitalsBtn.addEventListener('click', () => {
-            showScreen('orbitals');
-            if (!renderer) {
-                initOrbitalViewer();
-            }
-            initCollapsibleMenus();
+            // Redirigir a la web especificada
+            window.location.href = 'https://mikelikoptero.github.io/OrbitalakTlf';
         });
 
         backFromTableBtn.addEventListener('click', () => {
-            showScreen('main');
-        });
-
-        backFromOrbitalsBtn.addEventListener('click', () => {
             showScreen('main');
         });
 
@@ -1821,33 +1280,9 @@
             restoreNormalColors();
         });
 
-        // Event listeners para botones de orbitales
-        orbitalButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                orbitalButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                
-                const modelName = button.dataset.model;
-                orbitalViewer.style.display = 'block';
-                loadOrbitalModel(modelName);
-            });
-        });
-
-        resetOrbitalView.addEventListener('click', () => {
-            if (controls) {
-                controls.reset();
-            }
-        });
-
-        autoRotateOrbital.addEventListener('click', () => {
-            isAutoRotating = !isAutoRotating;
-            autoRotateOrbital.textContent = isAutoRotating ? '⏸' : '▶';
-        });
-
         // Inicialización
         createPeriodicTable();
         showElementInfo(elements[0]);
     </script>
 </body>
 </html>
-
