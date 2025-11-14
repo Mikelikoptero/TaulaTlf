@@ -111,7 +111,7 @@
         /* Botones de funcionalidades */
         .function-buttons {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 12px;
             margin-bottom: 20px;
         }
@@ -143,6 +143,13 @@
             font-size: 24px;
             margin-bottom: 8px;
             color: var(--primary-color);
+        }
+
+        /* Botones en fila para Orbitalak y Balentziak */
+        .row-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
         /* Información del elemento */
@@ -552,9 +559,15 @@
             <button class="func-btn" id="showTableBtn">
                 <div>Taula periodikoa</div>
             </button>
-            <button class="func-btn" id="showOrbitalsBtn">
-                <div>Orbitalak 3D</div>
-            </button>
+            
+            <div class="row-buttons">
+                <button class="func-btn" id="showOrbitalsBtn">
+                    <div>Orbitalak 3D</div>
+                </button>
+                <button class="func-btn" id="showValenceBtn">
+                    <div>Balentziak</div>
+                </button>
+            </div>
         </div>
         
         <div class="element-info" id="elementInfo">
@@ -771,6 +784,7 @@
         const elementInfo = document.getElementById('elementInfo');
         const showTableBtn = document.getElementById('showTableBtn');
         const showOrbitalsBtn = document.getElementById('showOrbitalsBtn');
+        const showValenceBtn = document.getElementById('showValenceBtn');
         const backFromTableBtn = document.getElementById('backFromTableBtn');
         const controlsCollapsible = document.getElementById('controlsCollapsible');
         const toggleElec = document.getElementById('toggleElec');
@@ -1260,6 +1274,11 @@
             window.location.href = 'https://mikelikoptero.github.io/OrbitalakTlf';
         });
 
+        showValenceBtn.addEventListener('click', () => {
+            // Redirigir a la web especificada
+            window.location.href = 'https://mikelikoptero.github.io/Balentzien-Taula/';
+        });
+
         backFromTableBtn.addEventListener('click', () => {
             showScreen('main');
         });
@@ -1351,6 +1370,3 @@
     </script>
 </body>
 </html>
-
-
-
