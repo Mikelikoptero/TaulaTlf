@@ -219,6 +219,14 @@
             gap: 12px;
         }
 
+        /* Nuevos botones añadidos */
+        .new-row-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 0;
+        }
+
         /* Pantalla de tabla periódica - VERTICAL MEJORADA */
         .table-screen {
             display: none;
@@ -615,6 +623,16 @@
                     <div>Balentziak</div>
                 </button>
             </div>
+            
+            <!-- NUEVOS BOTONES AÑADIDOS -->
+            <div class="new-row-buttons">
+                <button class="func-btn" id="showCompoundsBtn">
+                    <div>Konposatuak</div>
+                </button>
+                <button class="func-btn" id="showCalculatorBtn">
+                    <div>Kalkulagailuak</div>
+                </button>
+            </div>
         </div>
     </div>
     
@@ -799,6 +817,8 @@ const actinides = [
         const showTableBtn = document.getElementById('showTableBtn');
         const showOrbitalsBtn = document.getElementById('showOrbitalsBtn');
         const showValenceBtn = document.getElementById('showValenceBtn');
+        const showCompoundsBtn = document.getElementById('showCompoundsBtn');
+        const showCalculatorBtn = document.getElementById('showCalculatorBtn');
         const backFromTableBtn = document.getElementById('backFromTableBtn');
         const controlsCollapsible = document.getElementById('controlsCollapsible');
         const toggleElec = document.getElementById('toggleElec');
@@ -1293,6 +1313,17 @@ const actinides = [
             window.location.href = 'https://mikelikoptero.github.io/Balentzien-Taula/';
         });
 
+        // NUEVOS EVENT LISTENERS PARA LOS BOTONES AÑADIDOS
+        showCompoundsBtn.addEventListener('click', () => {
+            // Redirigir a la web especificada
+            window.location.href = 'https://mikelikoptero.github.io/KonposatuakTlf';
+        });
+
+        showCalculatorBtn.addEventListener('click', () => {
+            // Redirigir a la web especificada
+            window.location.href = 'https://mikelikoptero.github.io/Kalkulagailua';
+        });
+
         backFromTableBtn.addEventListener('click', () => {
             showScreen('main');
         });
@@ -1384,4 +1415,3 @@ const actinides = [
     </script>
 </body>
 </html>
-
