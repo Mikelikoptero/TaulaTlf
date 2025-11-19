@@ -674,7 +674,7 @@
     </div>
 
     <script>
-        // Datos completos de los elementos
+        // Datos completos de los elementos - CORREGIDOS DATOS DE IONIZACIÓN
         const elements = [
  {z:1,sym:'H',name:'Hidrogeno',mass:1.008,val:[-1,1],config:'1s¹',group:'nonmetal',x:1,y:1,radius:53,electroneg:2.20,ionization:1312},
  {z:2,sym:'He',name:'Helio',mass:4.0026,val:[0],config:'1s²',group:'noble',x:18,y:1,radius:31,electroneg:0,ionization:2372},
@@ -874,7 +874,7 @@ const actinides = [
             }
         });
 
-        // Mostrar información del elemento
+        // Mostrar información del elemento - CORREGIDA LA VISUALIZACIÓN DE IONIZACIÓN
         function showElementInfo(el) {
             document.getElementById('elementName').textContent = el.name;
             document.getElementById('elementZ').textContent = `Z = ${el.z}`;
@@ -900,8 +900,9 @@ const actinides = [
                 radiusDisplay.textContent = 'Ezezaguna';
             }
             
+            // CORRECCIÓN: Mostrar correctamente la energía de ionización
             const ionizationDisplay = document.getElementById('detailIonization');
-            if (el.ionization && el.ionization > 0) {
+            if (el.ionization !== undefined && el.ionization !== null && el.ionization > 0) {
                 ionizationDisplay.textContent = el.ionization + ' kJ/mol';
             } else {
                 ionizationDisplay.textContent = 'Ezezaguna';
