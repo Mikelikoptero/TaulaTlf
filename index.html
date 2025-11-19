@@ -581,10 +581,6 @@
             </div>
             <div class="element-details">
                 <div class="detail-item">
-                    <div class="detail-label">Zenbaki atomikoa</div>
-                    <div class="detail-value" id="detailZ">—</div>
-                </div>
-                <div class="detail-item">
                     <div class="detail-label">Masa molarra (u)</div>
                     <div class="detail-value" id="detailMass">—</div>
                 </div>
@@ -881,7 +877,6 @@ const actinides = [
             document.getElementById('elementSquare').textContent = el.sym;
             document.getElementById('elementSquare').style.background = getGroupColor(el.group);
             
-            document.getElementById('detailZ').textContent = el.z;
             document.getElementById('detailMass').textContent = el.mass ? el.mass + ' u' : '—';
             document.getElementById('detailVal').textContent = (el.val && el.val.length) ? el.val.join(', ') : '—';
             document.getElementById('detailConfig').textContent = el.config || '—';
